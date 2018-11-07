@@ -301,7 +301,7 @@ if ($dialmode == 'inbound')
 ?>
 </head>
 <!-- <body onLoad="indicator();" style="overflow:auto; overflow-style:auto"> -->
-<body onLoad="indicator();" style="overflow:auto; overflow-style:auto">
+<body onLoad="indicator();" style="overflow:auto; overflow-style:auto" onunload="webrtcunload();">
 <!--<body style="overflow:auto; overflow-style:auto">-->
 <div id="dialogcontainer" style="display:none"></div>
 <div id="conferencecontainer" style="display:none"></div>
