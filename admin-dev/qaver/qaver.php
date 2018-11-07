@@ -49,11 +49,7 @@ function clearnum($num)
 	}
 function getagentids($bcid)
 	{
-		//$res = mysql_query("SELECT * from members a CROSS JOIN memberdetails b ON a.userid=b.userid where a.bcid = $bcid AND b.afirst <> '' AND b.alast <> '' AND a.usertype='user' ORDER BY b.alast, b.afirst, a.userlogin");
-		$res = mysql_query("SELECT * from members m 
-							JOIN memberdetails md ON md.userid = m.userid 
-							WHERE m.bcid = $bcid AND m.active = 1 AND m.isdeleted = 0 AND m.usertype = 'user' AND m.roleid = 3 
-							ORDER BY md.alast, md.afirst, m.userlogin");
+		$res = mysql_query("SELECT * from members a CROSS JOIN memberdetails b ON a.userid=b.userid where a.bcid = $bcid AND b.afirst <> '' AND b.alast <> '' AND a.usertype='user' ORDER BY b.alast, b.afirst, a.userlogin");
 		while ($row = mysql_fetch_assoc($res))
 			{
 				$r[$row['userid']] = $row;
