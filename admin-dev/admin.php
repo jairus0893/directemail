@@ -159,7 +159,7 @@ mysql_query("update projects set customfields = '".  mysql_real_escape_string(js
 }
 if ($act == 'insertfieldparams')
 {
-    forms::insertfield($_REQUEST['type'],$_REQUEST['pid'],$_REQUEST['sid']);
+    forms::insertfield($_REQUEST['type'],$_REQUEST['pid']);
     exit;
 }
 if ($act == 'addlookuptable')
@@ -481,30 +481,34 @@ if ($act == 'updatecustom')
 		echo "$val";
 		exit;
 	}
-	if ($act == 'addcontact')
+if ($act == 'addcontact')
 	{
 		extract($_REQUEST);
-		$check = mysql_query("SELECT * FROM members WHERE userlogin = '".mysql_real_escape_string($userlogin)."' AND usertype IN ('client', 'clientuser') AND active = 1 AND isdeleted = 0");
+
+		/* ADDED BY Vincent Castro */
+		$check = mysql_query("SELECT * FROM members WHERE userlogin = '".mysql_real_escape_string($userlogin)."'");
 		$countcheck = mysql_num_rows($check);
 		if($countcheck){
 			echo "Login already exist!";
 			exit;
 		}
-		mysql_query("INSERT INTO members SET userlogin = '".mysql_real_escape_string($userlogin)."', userpass= '".mysql_real_escape_string($userpass)."', usertype = '$cusermode', bcid = '$bcid'");
+		/* ADDED BY Vincent Castro */
+
+		mysql_query("Insert into members set userlogin = '".mysql_real_escape_string($userlogin)."', userpass= '".mysql_real_escape_string($userpass)."', usertype = '$cusermode', bcid = '$bcid'");
 		$newuid = mysql_insert_id();
-		mysql_query("INSERT INTO client_contacts SET clientid = $clientid, userid = '$newuid', firstname = '".mysql_real_escape_string($firstname)."', lastname = '".mysql_real_escape_string($lastname)."', phone = '$phone', email = '".mysql_real_escape_string($email)."', bcid = '$bcid'");
+		mysql_query("insert into client_contacts set clientid = $clientid, userid = '$newuid', firstname = '".mysql_real_escape_string($firstname)."', lastname = '".mysql_real_escape_string($lastname)."', phone = '$phone', email = '".mysql_real_escape_string($email)."', bcid = '$bcid'");
 		echo "New Contact Added...";
 		exit;
 	}
-	if ($act == 'deletecontact')
-	{
-		extract($_REQUEST);
-		$res = mysql_query("SELECT * from client_contacts where client_contactid = '$client_contactid'");
-		$row = mysql_fetch_assoc($res);
-		mysql_query("update client_contacts set active = 0 where client_contactid = '$client_contactid'");
-		mysql_query("update members set active = 0 and isdeleted = 1 where userid = '".$row['userid']."'");
-		exit;
-	}
+if ($act == 'deletecontact')
+{
+    extract($_REQUEST);
+    $res = mysql_query("SELECT * from client_contacts where client_contactid = '$client_contactid'");
+    $row = mysql_fetch_assoc($res);
+    mysql_query("update client_contacts set active = 0 where client_contactid = '$client_contactid'");
+    mysql_query("update members set active = 0 where userid = '".$row['userid']."'");
+    exit;
+}
 if ($act == 'updatecontact')
 	{
 		extract($_REQUEST);
@@ -524,13 +528,13 @@ if ($act == 'newcontact')
 		?>
         <div class="entryform" style="width:400px">
         <title>New Client Contact</title>
-<div>*Login: <input type="text" id="cuserlogin" /></div>
-<div>*Password: <input type="text" id="cuserpass"  /></div>
-<div>*FirstName: <input type="text" id="cfirstname"  /></div>
-<div>*LastName: <input type="text" id="clastname"  /></div>
+<div>Login: <input type="text" id="cuserlogin" /></div>
+<div>Password: <input type="text" id="cuserpass"  /></div>
+<div>FirstName: <input type="text" id="cfirstname"  /></div>
+<div>LastName: <input type="text" id="clastname"  /></div>
 <div>Phone: <input type="text" id="cphone" /></div>
 <div>Email: <input type="text" id="cemail" /></div>
-<div>*UserCategory: <select id="cusermode" name="cusermode" >
+<div>UserCategory: <select id="cusermode" name="cusermode" >
 <option value="clientuser">User</option>
 <option value="client" selected="selected">Client</option>
 </select> </div>
@@ -545,13 +549,13 @@ if ($act == 'editclientcontact')
 		?>
         <div class="entryform" style="width:400px">
         <title>Edit Client Contact</title>
-<div>*Login: <input type="text" id="cuserlogin" disabled value="<?=$cc['userlogin'];?>" /></div>
-<div>*Password: <input type="text" id="cuserpass" value="<?=$cc['userpass'];?>"  /></div>
-<div>*FirstName: <input type="text" id="cfirstname" value="<?=$cc['firstname'];?>"  /></div>
-<div>*LastName: <input type="text" id="clastname"  value="<?=$cc['lastname'];?>" /></div>
+<div>Login: <input type="text" id="cuserlogin" value="<?=$cc['userlogin'];?>" /></div>
+<div>Password: <input type="text" id="cuserpass" value="<?=$cc['userpass'];?>"  /></div>
+<div>FirstName: <input type="text" id="cfirstname" value="<?=$cc['firstname'];?>"  /></div>
+<div>LastName: <input type="text" id="clastname"  value="<?=$cc['lastname'];?>" /></div>
 <div>Phone: <input type="text" id="cphone" value="<?=$cc['phone'];?>" /></div>
 <div>Email: <input type="text" id="cemail" value="<?=$cc['email'];?>" /></div>
-<div>*UserCategory: <select id="cusermode" name="cusermode" >
+<div>UserCategory: <select id="cusermode" name="cusermode" >
 <option value="clientuser" <?php echo $cc['usertype'] == 'clientuser' ? 'selected="selected"':'' ;?> >User</option>
 <option value="client" <?php echo $cc['usertype'] == 'client' ? 'selected="selected"':'' ;?> >Client</option>
 </select> </div>
@@ -1730,121 +1734,44 @@ if ($act == 'managecamp')
 		{
 		$catlist .= '<option value="'.$catrow['cid'].'">'.$catrow['desc'].'</option>';
 		}
-	//CUSTOM DISPOSITION
-	$getselectivecustomdispores = mysql_query("SELECT * FROM uiopt WHERE project_id = '".$projid."' AND config = 'SelectiveCustomDisposition' ORDER BY ts DESC LIMIT 1");
-	if (mysql_num_rows($getselectivecustomdispores) > 0) {
-		$getcdispodata = array();
-		
-		while ($getselectivecustomdisporow = mysql_fetch_assoc($getselectivecustomdispores)) {
-			$getcdispodata = $getselectivecustomdisporow;
-		}
-		if (strpos($getcdispodata["value"], ",")) {
-			$jsonintoarray = explode(",", $getcdispodata["value"]);
-			foreach ($jsonintoarray as $json) {
-				$jsonarr = json_decode($json);
-				foreach ($jsonarr as $uioptkey => $uioptval) {
-					$cdispokeys .= $uioptkey . ", ";
-				}
-			}
-		} else {
-			$jsonarr = json_decode($getcdispodata["value"]);
-			foreach ($jsonarr as $uioptkey => $uioptval) {
-				$cdispokeys .= $uioptkey . ", ";
-			}
-		}
-		$cdispokey = rtrim($cdispokeys, ", ");
-	}
-	$disres = mysql_query("SELECT * from statuses where projectid in ('$projid',0) order by sort ASC");
+	$disres = mysql_query("SELECT * from statuses where projectid = $projid $GLOBAL_DEFAULT_DISPO_CONDITION order by sort,statusname ASC ");
 	$countdisp = mysql_query("select dispo, count(*) as dispocount from leads_done where projectid = '$projid' group by dispo");
-	while ($cdrow = mysql_fetch_assoc($countdisp)) {
-		$udispo[$cdrow['dispo']] = $cdrow['dispocount'];
-	}
-	$dct = 0;
-	while ($disrow = mysql_fetch_array($disres)) {
-		$trclass = ($dct % 2) == 0 ? 'tableitem_':'tableitem';
-		if ($udispo[$disrow['statusname']] > 0) {
-			$del = 'Used';
-		} else {
-			$del = '<a href="#" onclick="deletedispo(\''.$disrow['statusid'].'\',\''.$projid.'\')">Delete</a>';
+	while ($cdrow = mysql_fetch_assoc($countdisp))
+		{
+			$udispo[$cdrow['dispo']] = $cdrow['dispocount'];
 		}
-		$stype = $disrow['statustype'];
-		if ($stype == 'transfer') {
-			$tlist = lists::findbyLid($disrow['options']);
-			$stype = "transfer to ".$tlist['listid'];
-		}
-		if ($stype== 'link') {
-			$tlist = lists::findbyLid($disrow['options']);
-			$stype = "link to ".$tlist['listid'];
-		}
-		$dable = $disrow['active'] == '1' ? "<a href=\"#\" onclick=\"disabledispo('".$disrow['statusid']."','$projid')\">Disable</a>" : "<a href=\"#\" onclick=\"enabledispo('".$disrow['statusid']."','$projid')\">Enable</a>";
-		$stype .= ' - '.$disrow['category'];
-		$dislist[$disrow['projectid']] .= '<tr class="'.$trclass.'" id="custdispo_'.$disrow['statusid'].'">';
-		if (mysql_num_rows($getselectivecustomdispores) > 0) {
-			$compare = strpos($cdispokey, $disrow['statusname']);
-			echo "</pre>";
-			if ($compare === false) {
-				$customchkbox = '<input type="checkbox" name="cdispobulkaction[]" onchange="checkboxselectivecustomdispo('.$projid.', '.$disrow['statusid'].', 0)" value="'.$disrow['statusid'].'">';
-			} else {
-				$checked = 'checked';
-				$customchkbox = '<input type="checkbox" name="cdispobulkaction[]" checked="'.$checked.'" onchange="checkboxselectivecustomdispo('.$projid.', '.$disrow['statusid'].', 1)" value="'.$disrow['statusid'].'">';
+        $dct = 0;
+	while ($disrow = mysql_fetch_array($disres))
+		{
+                $trclass = ($dct % 2) == 0 ? 'tableitem_':'tableitem';
+                if ($udispo[$disrow['statusname']] > 0)
+			{
+				$del = 'Used';
 			}
-		} else if (mysql_num_rows($getselectivecustomdispores) == 0) {
-			$customchkbox = '<input type="checkbox" name="cdispobulkaction[]" onchange="checkboxselectivecustomdispo('.$projid.', '.$disrow['statusid'].', 0)" value="'.$disrow['statusid'].'">';
+		else $del = '<a href="#" onclick="deletedispo(\''.$disrow['statusid'].'\',\''.$projid.'\')">Delete</a>';
+                $stype = $disrow['statustype'];
+                if ($stype == 'transfer')
+                {
+                    $tlist = lists::findbyLid($disrow['options']);
+                    $stype = "transfer to ".$tlist['listid'];
+                }
+                if ($stype== 'link')
+                {
+                    $tlist = lists::findbyLid($disrow['options']);
+                    $stype = "link to ".$tlist['listid'];
+                }
+                $dable = $disrow['active'] == '1' ? "<a href=\"#\" onclick=\"disabledispo('".$disrow['statusid']."','$projid')\">Disable</a>" : "<a href=\"#\" onclick=\"enabledispo('".$disrow['statusid']."','$projid')\">Enable</a>";
+                $stype .= ' - '.$disrow['category'];
+		$dislist[$disrow['projectid']] .= '<tr class="'.$trclass.'" id="custdispo_'.$disrow['statusid'].'"><td class="dataleft" width="30%">'.$disrow['statusname'].'</td><td class="dataleft" >'.$stype.'</td>';
+                if ($disrow['projectid'] != 0)
+                    {
+
+                    $dislist[$disrow['projectid']] .= '<td class="center-title">'.$del.' | '.$dable.'</td>';
+
+                    }
+                        $dislist[$disrow['projectid']] .= '</tr>';
+                        $dct++;
 		}
-		$dislist[$disrow['projectid']] .= '<td class="dataleft" width="10%">'.$customchkbox.'</td><td class="dataleft" width="30%">'.$disrow['statusname'].'</td><td class="dataleft" >'.$stype.'</td>';
-		if ($disrow['projectid'] != 0) {
-			$dislist[$disrow['projectid']] .= '<td class="center-title">'.$del.' | '.$dable.'</td>';
-		}
-		$dislist[$disrow['projectid']] .= '</tr>';
-		$dct++;
-	}
-	//DEFAULT DISPOSITION
-	$getselectivedefaultdispores = mysql_query("SELECT * FROM uiopt WHERE project_id = '".$projid."' AND config = 'SelectiveDefaultDisposition' ORDER BY ts DESC LIMIT 1");
-	if (mysql_num_rows($getselectivedefaultdispores) > 0) {
-		$getdispodata = array();
-		
-		while ($getselectivedefaultdisporow = mysql_fetch_assoc($getselectivedefaultdispores)) {
-			$getdispodata = $getselectivedefaultdisporow;
-		}
-		if (strpos($getdispodata["value"], ",")) {
-			$jsonintoarray = explode(",", $getdispodata["value"]);
-			foreach ($jsonintoarray as $json) {
-				$jsonarr = json_decode($json);
-				foreach ($jsonarr as $uioptkey => $uioptval) {
-					$dispokeys .= $uioptkey . ", ";
-				}
-			}
-		} else {
-			$jsonarr = json_decode($getdispodata["value"]);
-			foreach ($jsonarr as $uioptkey => $uioptval) {
-				$dispokeys .= $uioptkey . ", ";
-			}
-		}
-		$dispokey = rtrim($dispokeys, ", ");
-	} 
-	$ddispodisres = mysql_query("SELECT * from statuses where projectid = 0 and active = 1 order by sort ASC");
-	while ($ddispodisrow = mysql_fetch_assoc($ddispodisres)) {
-        $trclass = ($dct % 2) == 0 ? 'tableitem_':'tableitem';
-        $stype = $ddispodisrow['statustype'];
-        $stype .= ' - '.$ddispodisrow['category'];
-		$ddislist[$ddispodisrow['projectid']] .= '<tr class="'.$trclass.'" id="ddispo_'.$ddispodisrow['statusid'].'">
-		<td class="dataleft">';
-		if (mysql_num_rows($getselectivedefaultdispores) > 0) {
-			$compare = strpos($dispokey, $ddispodisrow['statusname']);
-			if ($compare === false) {
-				$ddislist[$ddispodisrow['projectid']] .= '<input type="checkbox" name="ddispobulkaction[]" onchange="checkboxselectivedefaultdispo('.$projid.', '.$ddispodisrow['statusid'].', 0)" value="'.$ddispodisrow['statusid'].'">';
-			} else {
-				$checked = 'checked';
-				$ddislist[$ddispodisrow['projectid']] .= '<input type="checkbox" name="ddispobulkaction[]" checked="'.$checked.'" onchange="checkboxselectivedefaultdispo('.$projid.', '.$ddispodisrow['statusid'].', 1)" value="'.$ddispodisrow['statusid'].'">';
-			}
-		} else if (mysql_num_rows($getselectivedefaultdispores) == 0) {
-			$ddislist[$ddispodisrow['projectid']] .= '<input type="checkbox" name="ddispobulkaction[]" onchange="checkboxselectivedefaultdispo('.$projid.', '.$ddispodisrow['statusid'].', 0)" value="'.$ddispodisrow['statusid'].'">';
-		}
-			$ddislist[$ddispodisrow['projectid']] .= '</td>
-		<td class="dataleft" width="30%">'.$ddispodisrow['statusname'].'</td>
-		<td class="dataleft" >'.$stype.'</td></tr>';
-        $dct++;
-	}
 	?>
 			<div id="ManageCampaignSettingsMenu">
                             <div id="cprojid" style="display:none"><?=$projrow['projectid'];?></div>
@@ -1906,7 +1833,7 @@ if ($act == 'managecamp')
                 </div>
 			</div>
 
-			<div id="campsettingsdisplay" style="float:left;width:82%">
+			<div id="campsettingsdisplay" style="float:left;width:82%;" >
                 <div id="pdetailsdiv" class="campsection">
                     <h3>Campaign Details</h3>
 					<?php
@@ -2029,7 +1956,7 @@ include("queuepreview/admin-managecamp-include.php");
                     <h3>Custom Dispositions</h3>(Drag to re-order)
                     <table id="customdispositions" class="dispositionstable" width="100%" style="width:100%;">
                         <thead>
-							<tr><th class="tableheader"></th><th class="tableheader" style="width:30%">Disposition</th><th class="tableheader">Details</th><th class="tableheadercenter">Actions</th></tr></thead>
+                            <tr><th class="tableheader" style="width:30%">Disposition</th><th class="tableheader">Details</th><th class="tableheadercenter">Actions</th></tr></thead>
                         <tbody>
                             <?php
                             if (strlen($dislist[$projid]) > 1)
@@ -2040,9 +1967,9 @@ include("queuepreview/admin-managecamp-include.php");
                     </table>
                     <h3>Default Dispositions</h3>
                     <table class="dispositionstable" width="100%" style="width:100%;">
-					<tr><th class="tableheader"></th><th class="tableheader" style="width:30%">Disposition</th><th class="tableheader">Details</th></tr>
+                            <tr><th class="tableheader" style="width:30%">Disposition</th><th class="tableheader">Details</th></tr>
                             <?php
-                            echo $ddislist[0];
+                            echo $dislist[0];
                             ?>
 
                     </table>
@@ -2075,6 +2002,7 @@ include("queuepreview/admin-managecamp-include.php");
                     <input type="button" onclick="emailtemplate('<?=$projid;?>',0)" value="New Email Template" />
                     <input type="button" onclick="emailsig('<?=$projid;?>',0)" value="New Signature" />
                         <table style="width:100%;">
+						
                                 <tr><h3>Email Templates</h3></tr>
 
                                 <tr><td class="tableheader">Name</td><td class="tableheader" colspan="1" style="">Attachments</td><td class="tableheader">Delete</td></tr>
@@ -2323,12 +2251,6 @@ if ($act == 'addstatus')
         extract($_REQUEST);
 		$uid = $_SESSION['uid'];
 		$datenow = date('Y-m-d H:i:s');
-		$check = mysql_query("SELECT * FROM statuses WHERE statusname LIKE '".mysql_real_escape_string($statusname)."' AND projectid = 0 AND active = 1");
-		$countcheck = mysql_num_rows($check);
-		if($countcheck){
-			echo "Cannot create. The disposition exists as default field. Please try again.";
-			exit;
-		}
         if ($pid > 0)
         {
 
@@ -2345,8 +2267,7 @@ if ($act == 'addstatus')
             }
             else $st2 = 'text';
             mysql_query("INSERT into statuses set userid = '$uid', timestamp = '$datenow', projectid = '$transfertopid', statusname = '".mysql_real_escape_string($statusname)."', statustype = '$st2', category = '$category', dispocat = '$dispocat', options='".mysql_real_escape_string($options)."'");
-		}
-		echo "Successfully created a custom disposition.";
+        }
         }
 	exit;
 	}
@@ -2960,11 +2881,8 @@ if ($act == 'createnewproject')
             echo "checkname";
             exit;
         }
-		$bcclientsres = mysql_query("SELECT maxhopper FROM bc_clients WHERE bcid = '$bcid'");
-		$bcclientsrow = mysql_fetch_assoc($bcclientsres);
-		$maxhopper = $bcclientsrow["maxhopper"];
-		mysql_query("INSERT into projects set projectname = '".mysql_real_escape_string($projname)."', projectdesc = '".mysql_real_escape_string($projdesc)."', dialmode = '".mysql_real_escape_string($dialmode)."', dialpace = '".mysql_real_escape_string($dialpace)."', clientid = '".mysql_real_escape_string($clientid)."', providerid = '".mysql_real_escape_string($providerid)."', queue_max = '$maxhopper', datecreated = NOW(), lastactive = NOW(), bcid = '$bcid'");
-		$id = mysql_insert_id();
+	mysql_query("INSERT into projects set projectname = '".mysql_real_escape_string($projname)."', projectdesc = '".mysql_real_escape_string($projdesc)."', dialmode = '".mysql_real_escape_string($dialmode)."', dialpace = '".mysql_real_escape_string($dialpace)."', clientid = '".mysql_real_escape_string($clientid)."', providerid = '".mysql_real_escape_string($providerid)."', datecreated = NOW(), lastactive = NOW(), bcid = '$bcid'");
+        $id = mysql_insert_id();
         mysql_query("INSERT into projects_droprate set projectid = '$id'");
         if ($clone == 'yes')
         {
@@ -3044,40 +2962,6 @@ if ($act == "checkboxselectivedefaultdispo") {
 		mysql_query("INSERT INTO uiopt SET project_id ='$projectid', config = 'SelectiveDefaultDisposition', value = '$jsonData'"); 
 	} else if (mysql_num_rows($getuioptres) == 0) {
 		mysql_query("INSERT INTO uiopt SET project_id ='$projectid', config = 'SelectiveDefaultDisposition', value = '$defaultdispofields'");
-	}
-}
-if ($act == "checkboxselectivecustomdispo") {
-	$projectid 	= $_REQUEST['projectid'];	
-	$statusid = $_REQUEST['statusid'];
-	$chk = $_REQUEST['chk'];
-	$cdispodisres = mysql_query("SELECT * FROM statuses WHERE statusid = '".$statusid."' AND active = 1");
-	while ($cdispodisrow = mysql_fetch_assoc($cdispodisres)) {
-		$newarr[$cdispodisrow["statusname"]] = 1;
-	}
-	$customdispofields = json_encode($newarr);
-	$getuioptres = mysql_query("SELECT * FROM uiopt WHERE project_id = '".$projectid."' AND config = 'SelectiveCustomDisposition' ORDER BY ts DESC LIMIT 1");
-	if (mysql_num_rows($getuioptres) > 0) {
-		$getuioptrow = mysql_fetch_assoc($getuioptres);
-		$value = $getuioptrow["value"];
-		if ($chk == 1) {
-			$jsonintoarray = explode(",", $value);
-			$cdispo = '';
-			foreach ($jsonintoarray as $json) {
-				if ($customdispofields != $json) {
-					$cdispo .= $json.",";
-				}
-			}
-			$jsonData = rtrim($cdispo, ",");
-		} else if ($chk == 0) {
-			if ($value != "") {
-				$jsonData = $value.",".$customdispofields;
-			} else {
-				$jsonData = $customdispofields;
-			}
-		}
-		mysql_query("INSERT INTO uiopt SET project_id ='$projectid', config = 'SelectiveCustomDisposition', value = '$jsonData'"); 
-	} else if (mysql_num_rows($getuioptres) == 0) {
-		mysql_query("INSERT INTO uiopt SET project_id ='$projectid', config = 'SelectiveCustomDisposition', value = '$customdispofields'");
 	}
 }
 include_once("queuepreview/admin-include.php");
