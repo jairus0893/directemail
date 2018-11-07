@@ -391,15 +391,35 @@ function voicemail(pid)
 }
 function deletevm(ob,pid,dt)
 {
-    pleasewait('Deleting Voicemail..');
-    var params = '?act=deletevm&ob='+ob;
-    jQuery.ajax({
-        url:'admin.php'+params,
-        success: function(resp){
-            $("#"+dt).remove();
-            pleasewait('close');
-        }
+
+    Ext.MessageBox.show({
+    title:'Delete Voicemail?',
+    msg: 'Are you sure you want to delete this voicemail?',
+    width : 350,
+    closable : false,
+    buttons: Ext.MessageBox.YESNO,
+        fn : function(buttonValue, inputText, showConfig){
+    
+            if (buttonValue == 'yes'){
+                
+                // pleasewait('Deleting Voicemail..');
+                var params = '?act=deletevm&ob='+ob;
+                Ext.Ajax.request({
+                    url:'admin.php'+params,
+                    success: function(resp){
+                        $("#"+dt).remove();
+                        pleasewait('close');
+                    }
+                });
+                
+            } //end btn
+        },
+        icon : Ext.MessageBox.WARNING
+        
     });
+
+
+
 
 }
 function actiontags(pid)
@@ -421,70 +441,125 @@ function hideAllContent()
         });
 }
 function deactivateClient(id){
-    if (!confirm)
-            {
-                confirmbox("deactivateClient("+id+")","Are you sure?");
+
+    Ext.Msg.show({
+        title : 'Confirm',
+        msg : 'Are you sure you want deactivate this client?',
+        buttons : Ext.Msg.YESNO,
+        fn : function(buttonValue, inputText, showConfig){
+        
+            if (buttonValue == 'yes'){
+
+                var inactive = $.ajax({
+                    type: "POST",
+                    url: "admin.php",
+                    data: { id: id, deactivate: 'yes' },
+                    dataType: 'json',
+                    success: function(data, status) {
+                        var state = $("#selectCampaignStatus").val();
+                        manclient(state);
+                        
+                    }
+                });
+
             }
-     else {
-         confirm = false;
-	var inactive = $.ajax({
-		  type: "POST",
-		  url: "admin.php",
-		  data: { id: id, deactivate: 'yes' },
-		  dataType: 'json',
-		  success: function(data, status) {
-                            var state = $("#selectCampaignStatus").val();
-                            manclient(state);
-		  	
-    	}
-	});
-     }
+        },
+        icon : Ext.MessageBox.QUESTION
+    });
+
 }
 function deleteClient(id){
-    if (!confirm)
-            {
-                confirmbox("deleteClient("+id+")","Are you sure?");
-            }
-     else {
-         confirm = false;
-	var inactive = $.ajax({
-		  type: "POST",
-		  url: "admin.php",
-		  data: { id: id, deactivate: 'del' },
-		  dataType: 'json',
-		  success: function(data, status) {
-                      var state = $("#selectCampaignStatus").val();
-                            manclient(state);
-    	}
-	});
-     }
+  
+    Ext.MessageBox.show({
+    title:'Delete Record?',
+    msg: 'Are you sure you want to delete this client?',
+    width : 350,
+    closable : false,
+    buttons: Ext.MessageBox.YESNO,
+        fn : function(buttonValue, inputText, showConfig){
+    
+            if (buttonValue == 'yes'){
+                confirm = false;
+                var inactive = $.ajax({
+                    type: "POST",
+                    url: "admin.php",
+                    data: { id: id, deactivate: 'del' },
+                    dataType: 'json',
+                    success: function(data, status) {
+                        var state = $("#selectCampaignStatus").val();
+                        manclient(state);
+                    }
+                });
+
+            } //end btn
+        },
+        icon : Ext.MessageBox.WARNING
+        
+    });
+
+    
+
 }
 function activateClient(id){
-    confirm = false;
-    var inactive = $.ajax({
-             type: "POST",
-             url: "admin.php",
-             data: { id: id, deactivate: 'no' },
-             dataType: 'json',
-             success: function(data, status) {
-                 var state = $("#selectCampaignStatus").val();
-                            manclient('Active');
-    }
-    });   
+     
+    Ext.Msg.show({
+        title : 'Confirm',
+        msg : 'Are you sure you want activate this client?',
+        buttons : Ext.Msg.YESNO,
+        fn : function(buttonValue, inputText, showConfig){
+        
+            if (buttonValue == 'yes'){
+
+                confirm = false;
+                var inactive = $.ajax({
+                    type: "POST",
+                    url: "admin.php",
+                    data: { id: id, deactivate: 'no' },
+                    dataType: 'json',
+                    success: function(data, status) {
+                        var state = $("#selectCampaignStatus").val();
+                        manclient('Active');
+                    }
+                });  
+
+            }
+        },
+        icon : Ext.MessageBox.QUESTION
+    });
+
 }
 function setListDeleted(id){
-	var inactive = $.ajax({
-		  type: "POST",
-		  url: "admin.php",
-		  data: { id: id, setlistDeleted: 'yes' },
-		  dataType: 'json',
-		  success: function(data, status) {
-	       if(data.count > 0){
-		  		 $(".li-"+id).hide('slow');
-		  	}
-    	}
-	});
+        
+    Ext.MessageBox.show({
+    title:'Delete Record?',
+    msg: 'Are you sure you want to delete this record?',
+    width : 350,
+    closable : false,
+    buttons: Ext.MessageBox.YESNO,
+        fn : function(buttonValue, inputText, showConfig){
+    
+            if (buttonValue == 'yes'){
+
+                var inactive = $.ajax({
+                type: "POST",
+                url: "admin.php",
+                data: { id: id, setlistDeleted: 'yes' },
+                dataType: 'json',
+                success: function(data, status) {
+                    if(data.count > 0){
+                        $(".li-"+id).hide('slow');
+                    }
+                }
+                });
+
+            } //end btn
+        },
+        icon : Ext.MessageBox.WARNING
+        
+    });
+
 }
+
 function focusbox(x){x.style.backgroundColor = "#E1E1E1";}
 function outfocus(y){y.style.backgroundColor = "#FFFFFF";}
 var validlistid = false;
@@ -683,12 +758,31 @@ function editclientcontact(cid)
 }
 function deletecontact(cid,clientid)
 {
-    jQuery.ajax({
-                url: "admin.php?act=deletecontact&client_contactid="+cid,
-                success:function(resp){
-                    clientdetails(clientid);
-                }
-            });
+   
+
+    Ext.MessageBox.show({
+    title:'Delete Record?',
+    msg: 'Are you sure you want to delete this contact?',
+    width : 350,
+    closable : false,
+    buttons: Ext.MessageBox.YESNO,
+        fn : function(buttonValue, inputText, showConfig){
+    
+            if (buttonValue == 'yes'){
+
+                Ext.Ajax.request({
+                    url: "admin.php?act=deletecontact&client_contactid="+cid,
+                    success:function(resp){
+                        clientdetails(clientid);
+                    }
+                });
+            } 
+        },
+        icon : Ext.MessageBox.WARNING
+        
+    });
+
+
 }
 function addcontact(cid)
 	{
@@ -699,20 +793,19 @@ function addcontact(cid)
 		var phone = document.getElementById('cphone').value;
 		var email = document.getElementById('cemail').value;
 		var usermode = document.getElementById('cusermode').value;
-		if (userlogin != "" && userpass != "" && firstname != "" && lastname != "") {
-		    http.open("GET", url+"?act=addcontact&clientid="+cid+"&userlogin="+userlogin+"&userpass="+userpass+"&firstname="+firstname+"&lastname="+lastname+"&phone="+phone+"&email="+email+"&cusermode="+usermode);
-            http.onreadystatechange = function(){
-			if (http.readyState == 4) {
+		http.open("GET", url+"?act=addcontact&clientid="+cid+"&userlogin="+userlogin+"&userpass="+userpass+"&firstname="+firstname+"&lastname="+lastname+"&phone="+phone+"&email="+email+"&cusermode="+usermode);
+		http.onreadystatechange = function(){
+		if (http.readyState == 4)
+			{
 				var resp = http.responseText;
 				$("#dialogcontainer").dialog("close");
-		        alert(resp);
-		        clientdetails(cid);
+                /* ADDED BY Vincent Castro */
+                alert(resp);
+                                clientdetails(cid);
 			}
+		
 		};
-		    http.send(null);
-        } else {
-            alert("Fill in the required fields!");
-        }
+		http.send(null);
 	}
 function updatecontact(cid,clientid)
 	{
@@ -723,9 +816,8 @@ function updatecontact(cid,clientid)
 		var phone = document.getElementById('cphone').value;
 		var email = document.getElementById('cemail').value;
 		var usermode = document.getElementById('cusermode').value;
-        var livemonitor = $("#clivemonitor").val();
-        if (userlogin != "" && userpass != "" && firstname != "" && lastname != "") {
-		        $.ajax({
+                var livemonitor = $("#clivemonitor").val();
+                $.ajax({
                     url: "admin.php?act=updatecontact&client_contactid="+cid+"&userlogin="+userlogin+"&userpass="+userpass+"&firstname="+firstname+"&lastname="+lastname+"&phone="+phone+"&email="+email+"&cusermode="+usermode+"&livemonitor="+livemonitor,
                     success: function(resp)
                     {
@@ -733,9 +825,7 @@ function updatecontact(cid,clientid)
                         clientdetails(clientid);
                     }
                 });
-            } else {
-            alert("Fill in the required fields!");
-        }
+		
 	}
 function createpopup(action,id)
 	{
@@ -866,16 +956,27 @@ function gettimesheet()
 		document.getElementById('repcontent').innerHTML=resp
 		}};
 	http.send(null);	
-	}
+    }
+    
 function refreshleads(proid)
 	{
+
 	http.open("GET", url+"?act=refreshleads&projectid="+proid, true);
-	http.onreadystatechange = function(){
-		if (http.readyState == 4)
-		{
-		childmessage('Leads Refreshed');
-		}};
-	http.send(null);
+	
+    Ext.Msg.confirm("Confirm", "Are you sure you want to Refresh Leads?", function(btn){
+        
+        if (btn == 'yes'){
+            http.onreadystatechange = function(){
+		        if (http.readyState == 4){
+                    Ext.MessageBox.alert('Status', 'Leads Refreshed');
+		        }};
+                http.send(null);
+           
+        }
+    });
+       
+   
+
 	}
 function changeclient(di, vl, cid)
 	{
@@ -996,33 +1097,29 @@ function sortedapp(sorty)
 	}
 function deleteproj(pid)
 	{
-	jQuery('<div/>', {
-    id: 'dialog-confirm',
-    title: 'Deactivate Campaign?',
-	style: 'display:none',
-	html: 'This will delete the campaign permanently and cannot be undone. Proceed?'
-	}).appendTo('body');
-	$( "#dialog-confirm" ).dialog({
-			resizable: false,
-			height:140,
-			modal: true,
-			buttons: {
-				"Deactivate": function() {
-						$.ajax({
-							success: function(data)
-								{
-									getapp('mancamp');
-									$("#dialog-confirm").dialog( "close" );
-								},
-						url: 'admin.php?act=deleteproj&project='+pid
-								});
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-	}
+    Ext.Msg.show({
+        title : 'Deactivate Campaign',
+        msg : 'This will delete the campaign permanently and cannot be undone. Proceed? ',
+        width : 350,
+        closable : false,
+        buttons : Ext.Msg.YESNO,
+        multiline : false,
+        fn : function(buttonValue, inputText, showConfig){
+        
+            if (buttonValue == 'yes'){
+
+                    Ext.Ajax.request({
+                        success: function(data){
+                            getapp('mancamp');
+                        },  
+                            url: 'admin.php?act=deleteproj&project='+pid
+                        });
+            }
+        },
+        icon : Ext.MessageBox.WARNING
+    });
+    }
+    
 function changelist(fld, lis)
 	{
 	if (lister == 0)
@@ -1044,13 +1141,53 @@ function changelist(fld, lis)
 	cur.innerHTML = '<select onblur="updatelist(\''+lis+'\',this, \'active\')"><option value="'+rval+'" selected>'+cval+'</option>'+optwo+'</select>';
 	}
 	}
-function togglelist(lid)
-{
+function togglelist(lid){
     var val = $("#active"+lid).val();
-    $.ajax({
-        url: "admin.php?act=updatelist&listid="+lid+"&field=active&val="+val
-    });
+  
+
+    if (val == 1) { 
+        Ext.Msg.show({
+            title : 'Confirm',
+            msg : 'Are you sure you want to change the status to Active?',
+            buttons : Ext.Msg.YESNO,
+            fn : function(buttonValue, inputText, showConfig){
+            
+                if (buttonValue == 'yes'){
+                    Ext.Ajax.request({
+                        url: "admin.php?act=updatelist&listid="+lid+"&field=active&val="+val
+                    });
+                }else{
+
+                   $("#active"+lid).val('0');
+                }
+            },
+            icon : Ext.MessageBox.QUESTION
+        });
+
+    }else{
+        Ext.Msg.show({
+            title : 'Confirm',
+            msg : 'Are you sure you want to change the status to Inactive?',
+            buttons : Ext.Msg.YESNO,
+            fn : function(buttonValue, inputText, showConfig){
+            
+                if (buttonValue == 'yes'){
+                    Ext.Ajax.request({
+                        url: "admin.php?act=updatelist&listid="+lid+"&field=active&val="+val
+                    });
+
+                } else {
+
+                    $("#active"+lid).val('1');
+                }
+            },
+            icon : Ext.MessageBox.QUESTION
+        });
+
+    }
+      
 }
+
 function togglednclist(dncid, a)
 {
 	if (a == "deactivate") {
@@ -1429,7 +1566,7 @@ function clickhandle(linker)
 	        {
 	            dialogwindow(linker.action);
 	        }
-        else if (linker.action == 'editcampaignlists')
+            else if (linker.action == 'editcampaignlists')
 	        {
 	            dialogwindow(linker.action);
 	        }
@@ -1445,7 +1582,7 @@ function clickhandle(linker)
             {
                 dialogwindow(linker.action);
             }
-        else if (linker.action == 'newdnclist')
+            else if (linker.action == 'newdnclist')
             {
                 dialogwindow(linker.action);
             }
@@ -1530,7 +1667,7 @@ function listMenu(action)
                     {
                         jQuery("#managelistresult").html(resp);
                         getguide();
-			
+
                         $(".datatabs").dataTable({
                             'iDisplayLength':20
                         });
@@ -1657,7 +1794,7 @@ function updatescript(scriptid)
 
 function emailtemplate(pid, templateid)
 	{
-                camploaded = false;
+        camploaded = false;
 		var params = '?act=emailtemplates&templateid='+templateid+'&pid='+pid;
 		if (templateid == 0)
 			{
@@ -2097,19 +2234,30 @@ function updatecamp(projid,field,value)
 confirm = false;
 function deleteuser(aid)
 {	
-        if (!confirm)
-            {
-                confirmbox("deleteuser("+aid+")","Are you sure?");
-            }
-        else {
-        confirm = false;
-        $.ajax({
-            url: "admin.php?act=deleteuser&uid="+aid,
-            success: function(){
-                getapp('managents');
-            }
-        });
-        }
+
+    Ext.MessageBox.show({
+    title:'Delete Record?',
+    msg: 'Are you sure you want to delete this user?',
+    width : 350,
+    closable : false,
+    buttons: Ext.MessageBox.YESNO,
+        fn : function(buttonValue, inputText, showConfig){
+    
+            if (buttonValue == 'yes'){
+                $.ajax({
+                    url: "admin.php?act=deleteuser&uid="+aid,
+                    success: function(){
+                        getapp('managents');
+                    }
+                });
+
+            } //end btn
+        },
+        icon : Ext.MessageBox.WARNING
+        
+    });
+
+
 	
 }
 function confirmbox(fn, message)
@@ -2352,13 +2500,27 @@ function unichanges_submit(ob,tablef,fieldf,targetf,ident,ci)
    params: { act: 'unichange', table: tablef, field : fieldf, target: targetf, id: ident, value: val  }
 });
 }
+
 function canceltemplate(templateid, projectid)
 {
-    $.ajax({
-        url: 'admin.php?act2=canceltemplate&tid='+templateid,
-        success: function(){
-            manage_persist(projectid);
-        }
+    Ext.MessageBox.show({
+    title:'Delete Email Template?',
+    msg: 'Are you sure you want to delete this template?',
+    width : 350,
+    closable : false,
+    buttons: Ext.MessageBox.YESNO,
+        fn : function(buttonValue, inputText, showConfig){
+            if (buttonValue == 'yes'){
+                Ext.Ajax.request({
+                    url: 'admin.php?act=emailtemplates&act2=canceltemplate&tid='+templateid,
+                    success: function(resp){
+                        manage_persist(projectid);
+                    }
+                });
+            } //end btn
+        },
+        icon : Ext.MessageBox.WARNING
+        
     });
 }
 function cancelsignature(sigid,projectid)
@@ -2439,7 +2601,8 @@ function mcerender(targetid)
 			theme_advanced_resize_horizontal : true,
 			apply_source_formatting : true,
 			force_br_newlines : true,
-			force_p_newlines : false,
+            force_p_newlines : false,
+            paste_data_images: true,
                         remove_script_host: false,
 			relative_urls : false,
                         content_css : "styles/style.css"
@@ -2656,30 +2819,6 @@ function newcf(projid)
         }
     });
 }
-function scriptnewcf(projid,sid)
-{
-    $( "#dialogscript" ).dialog({
-        resizable: false,
-        height: "auto",
-        width: 400,
-        modal: true,
-        buttons: {
-            "Confirm": function() {
-                updatescript(sid);
-                $( this ).dialog( "close" );
-                jQuery.ajax({
-                    url: "admin.php?act=getapp&app=newcf&pid="+projid,
-                    success: function(resp){
-                        dresponsehandler(resp);
-                    }
-                });
-            },
-            Cancel: function() {
-                $( this ).dialog( "close" );
-            }
-        }
-    });
-}
 function addcf(projid)
 {
     jQuery.ajax({
@@ -2869,16 +3008,16 @@ function dispoupdateupload() {
   xhr.send(fd);
 }
 function dnclistupload() {
-  var xhr = new XMLHttpRequest();
-  var fd = new FormData(document.getElementById('dncuploadcsv'));
-  /* event listners */
-  xhr.upload.addEventListener("progress", uploadProgress, false);
-  xhr.addEventListener("load", uploadComplete, false);
-  xhr.addEventListener("error", uploadFailed, false);
-  xhr.addEventListener("abort", uploadCanceled, false);
-  /* Be sure to change the url below to the url of your upload server side script */
-  xhr.open("POST", "leadsloader-s3.php");
-  xhr.send(fd);
+    var xhr = new XMLHttpRequest();
+    var fd = new FormData(document.getElementById('dncuploadcsv'));
+    /* event listners */
+    xhr.upload.addEventListener("progress", uploadProgress, false);
+    xhr.addEventListener("load", uploadComplete, false);
+    xhr.addEventListener("error", uploadFailed, false);
+    xhr.addEventListener("abort", uploadCanceled, false);
+    /* Be sure to change the url below to the url of your upload server side script */
+    xhr.open("POST", "leadsloader-s3.php");
+    xhr.send(fd);
 }
 function dolm()
 {
@@ -2935,10 +3074,10 @@ function add_dispo(nprojid)
 	http.onreadystatechange = function(){
 		if (http.readyState == 4)
 			{
-            var resp = http.responseText;
+                var resp = http.responseText;
 			$("#dialogcontainer").dialog("close");
 	        alert(resp);
-            manage_persist(prjid);
+			manage_persist(prjid);
 			}
 		};;
 	http.send(data);
@@ -3046,6 +3185,9 @@ if (ht == 'select')
     }
 inputNode.innerHTML = "<label>"+lab+"</label>&nbsp;&nbsp;"+htm;
 range.insertNode(inputNode);
+
+
+
 $("#dialogcontainer").dialog('close');
 doeditable();
 }
@@ -3054,6 +3196,7 @@ var toclear = 0;
 function doeditable()
 {
     $("#scr_ifr").contents().find(".afield").click(function() {
+
     var label = $(this).find("label").html();
     var t = $(this).find("select");
     toclear = $(this);
@@ -3102,11 +3245,11 @@ function addanotheroption(ct)
     jQuery("#otheroptions").append(options);
     
 }
-function fieldparams(type, sid)
+function fieldparams(type)
 {
     var pid = $("#pid").val();
     $.ajax({
-        url:"admin.php?act=insertfieldparams&type="+type+"&pid="+pid+"&sid="+sid,
+        url:"admin.php?act=insertfieldparams&type="+type+"&pid="+pid,
         success: dresponsehandler
 
 
@@ -3238,6 +3381,12 @@ function dragmerge_a(event,el)
     
     event.dataTransfer.clearData();
     event.dataTransfer.setData('text/plain',' [agent-'+el+'] ');
+}
+function dragmerge_cl(event,el)
+{
+    
+    event.dataTransfer.clearData();
+    event.dataTransfer.setData('text/plain',' [client-'+el+'] ');
 }
 var chats = new Array();
 function converse()
@@ -3607,6 +3756,7 @@ function initupmce(ta, repid)
 		content_css: 'styles/style.css',
 		popup_css: 'styles/style.css',
 		// Theme options
+        paste_data_images: true,
 		width: 789,
 		height: 500,
 		theme_advanced_toolbar_align : "left",
@@ -3694,22 +3844,6 @@ function removednc(dncid)
 	    	listMenu('managedonotcall');
 	    }
 	});
-}
-function checkboxselectivedefaultdispo(projectid, statusid, chk) {						
-    $.ajax({																  		
-        url: "admin.php?act=checkboxselectivedefaultdispo&projectid="+projectid+"&statusid="+statusid+"&chk="+chk,							  		
-        success: function(data){
-            manage_persist(projectid);
-        }								
-    });															
-}
-function checkboxselectivecustomdispo(projectid, statusid, chk) {						
-    $.ajax({																  		
-        url: "admin.php?act=checkboxselectivecustomdispo&projectid="+projectid+"&statusid="+statusid+"&chk="+chk,							  		
-        success: function(data){
-            manage_persist(projectid);
-        }								
-    });															
 }
 </script>
 <?php  
