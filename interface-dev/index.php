@@ -242,8 +242,9 @@ $(document).ready(
         });            
     });
 function login_softphone_and_portal() {
-    var newWindow = window.open("https://bcwebrtc.bluecloudaustralia.com.au/startup.php?random="+Math.random()+"&mode=0", "", "width=300,height=160");
+
     changeproj();
+    window.name = 'startwindow';
 }
 </script>
 <?
