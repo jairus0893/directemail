@@ -2930,39 +2930,5 @@ if ($act == 'vmuserlogs') {
 	mysql_query("INSERT INTO vmlog set projectid = '$projid', phone_number = '$phonenumber', length  = '$length', epoch = '$datetime', userid = '$userid', timestamp = ".time()."");
 	exit;
 }
-if ($act == "checkboxselectivedefaultdispo") {
-	$projectid 	= $_REQUEST['projectid'];	
-	$statusid = $_REQUEST['statusid'];
-	$chk = $_REQUEST['chk'];
-	$ddispodisres = mysql_query("SELECT * FROM statuses WHERE statusid = '".$statusid."' AND active = 1");
-	while ($ddispodisrow = mysql_fetch_assoc($ddispodisres)) {
-		$newarr[$ddispodisrow["statusname"]] = 1;
-	}
-	$defaultdispofields = json_encode($newarr);
-	$getuioptres = mysql_query("SELECT * FROM uiopt WHERE project_id = '".$projectid."' AND config = 'SelectiveDefaultDisposition' ORDER BY ts DESC LIMIT 1");
-	if (mysql_num_rows($getuioptres) > 0) {
-		$getuioptrow = mysql_fetch_assoc($getuioptres);
-		$value = $getuioptrow["value"];
-		if ($chk == 1) {
-			$jsonintoarray = explode(",", $value);
-			$dispo = '';
-			foreach ($jsonintoarray as $json) {
-				if ($defaultdispofields != $json) {
-					$dispo .= $json.",";
-				}
-			}
-			$jsonData = rtrim($dispo, ",");
-		} else if ($chk == 0) {
-			if ($value != "") {
-				$jsonData = $value.",".$defaultdispofields;
-			} else {
-				$jsonData = $defaultdispofields;
-			}
-		}
-		mysql_query("INSERT INTO uiopt SET project_id ='$projectid', config = 'SelectiveDefaultDisposition', value = '$jsonData'"); 
-	} else if (mysql_num_rows($getuioptres) == 0) {
-		mysql_query("INSERT INTO uiopt SET project_id ='$projectid', config = 'SelectiveDefaultDisposition', value = '$defaultdispofields'");
-	}
-}
 include_once("queuepreview/admin-include.php");
 
