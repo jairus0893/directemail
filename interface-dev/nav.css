@@ -1,0 +1,47 @@
+.menu {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: #fff;
+}
+.menu li {
+	padding: 0;
+	margin: 0;
+	height: 39px;
+	margin-right: 1em;
+	list-style: none;
+	background-repeat: no-repeat;
+}
+.menu li a, .menu li a:visited {
+	display: block;
+	text-decoration: none;
+	text-indent: -9999px;
+	height: 39px;
+	background-repeat: no-repeat;
+}
+
+/* ICON ELEMENTS */ 
+
+
+
+
+
+.home {background-image: url(icons/talk_hover.png);width: 78px;}
+.home a {background-image: url(icons/talk.png);}
+
+.about {background-image: url(icons/schedule_hover.png);width: 112px;}
+.about a {background-image: url(icons/schedule.png);}
+
+.services {background-image: url(icons/statistics_hover.png);width: 112px;}
+.services a {background-image: url(icons/statistics.png);}
+
+.contact {background-image: url(icons/chat_hover.png);width: 82px;}
+.contact a {background-image: url(icons/chat.png);}
+
+.exit {background-image: url(icons/exit_hover.png);width: 94px;}
+.exit a {background-image: url(icons/exit.png);}
+ul.menu li a:hover {background: none;}
+.menu li {float: left;}
+.menu:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+
+
