@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="cal.css" />
+<script type="text/javascript" src="zapatec.js"></script>
+<script type="text/javascript" src="calendar.js"></script>
+<script type="text/javascript" src="calendar-en.js"></script>
+<input type="text" id="calendar" name="calendar" />
+<button id="trigger" style="background-image:url(calendar.png)">...</button>
+<script type="text/javascript">//<![CDATA[
+      Zapatec.Calendar.setup({
+        firstDay          : 1,
+        showOthers        : true,
+        showsTime         : true,
+        timeFormat        : "12",
+        electric          : false,
+        inputField        : "calendar",
+        button            : "trigger",
+        ifFormat          : "%Y-%m-%d %I:%M %p",
+        daFormat          : "%Y/%m/%d"
+      });
+    //]]></script>

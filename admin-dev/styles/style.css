@@ -1,0 +1,482 @@
+@charset "utf-8";
+/* CSS Document */
+html, body {
+	overflow:auto;
+}
+body {
+font-family:Tahoma, Arial, sans-serif;
+font-size:11px;
+}
+.center-title {
+color:#666666;
+font-weight:bold;
+line-height:12pt;
+padding:2px;
+text-align:center;
+}
+.heading {
+background-color: #0CF;
+}
+
+#container {
+	width:100%;
+	margin:0 auto;
+	height: 100%;
+}
+
+table#pdetails td div {
+	min-height:20px;
+	min-width:100px;
+}
+
+#displayport {
+    bottom: 0;
+    margin-top: 1%;
+    overflow: auto;
+    padding-left: 0.5%;
+    padding-right: 0.5%;
+    position: absolute;
+    top: 80px;
+    width: 99%;
+    margin-bottom: 20px;
+}
+.apptitle {
+	font-weight:bold;
+	width:100%;
+	/*border-bottom:#006 1px solid;*/
+	font-style:italic;
+	color:#103156;
+        font-size:1.2em;
+}
+
+#ACampaignsLeftNavigation {
+    background: none repeat scroll 0 0 #F2F2F2;
+    float: left;
+    width: 15%;
+    height:97.5%;
+    padding-left:1%;
+    padding-bottom: 1%;
+    margin-right: 1%;
+}
+#ACampaignsLeftNavigation > .secnav > input {
+    font-size: 1.2em;
+    margin-top: 15px;
+    padding: 15px;
+}
+#displayport > .dataTables_wrapper {
+	clear:none;
+	float:left;
+	width:82%
+}
+.dataTables_wrapper td {
+    padding:3px;
+    height: 1.8em;
+}
+#ManageCampaignSettingsMenu {
+    background: none repeat scroll 0 0 #F2F2F2;
+    float: left;
+    width: 15%;
+    height:97.5%;
+    padding-left:1%;
+    padding-bottom: 1%;
+    margin-right: 1%;
+}
+.adminMenuLeft {
+    background: none repeat scroll 0 0 #F2F2F2;
+    float: left;
+    width: 15%;
+    height:97.5%;
+    padding-left:1%;
+    padding-bottom: 1%;
+    margin-right: 1%;
+}
+.adminMenuLeft > div > ul > li {
+	padding: 5px;
+}
+.secnav > ul {
+    margin-top: 30px !important;
+}
+#ManageCampaignSettingsMenu > div > ul > li {
+	padding: 5px;
+}
+li.activeMenu {
+         font-weight:bold;
+}
+.manageCampMenu {
+	width:100%; 
+	text-align:right; 
+	display:block; 
+	text-decoration:none;
+	color:#005D96;
+	font-weight: regular;
+        font-size:1.2em;
+}
+.manageListMenu {
+	text-align:right; 
+	display:block; 
+	text-decoration:none;
+	color:#005D96;
+	font-weight: regular;
+        font-size:1.2em;
+        padding: 5px;
+}
+#managelistresult {
+    clear:none;
+	float:left;
+	width:82%
+}
+#zenbox_tab {
+    display:none !important;
+}
+#tlyPageGuideWrapper .tlypageguide_toggle {
+}
+td.center-title {
+color:#666666;
+font-weight:bold;
+line-height:12pt;
+padding:3px;
+text-align:center;
+vertical-align: top;
+}
+td.reporthead {
+	border-left:none;
+}
+td.datas {
+padding:3px;
+text-align:center;
+}
+td.dataleft {
+padding:3px;
+text-align:left;
+}
+body {margin:0px; border:0px; padding:0px;}
+form {margin:0px; border:0px; padding:0px;}
+none {margin:0px; border:0px; padding:0px; overflow:hidden;}
+img {cursor:pointer; vertical-align:middle;}
+input.dial {background-image:url(../images/dial.jpg); width:429px; height:27px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.dial:hover {background-image:url(../images/dial_.jpg); width:429px; height:27px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.script {background-image:url(../images/script.jpg); width:429px; height:27px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.script:hover {background-image:url(../images/script_.jpg); width:429px; height:27px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.options-conf {background:transparent url(../images/button-conf.png); width:70px; height:21px; border:0px; overflow:hidden; cursor:pointer;}
+input.options-blind {background:transparent url(../images/button-blind.png); width:70px; height:21px; border:0px; overflow:hidden; cursor:pointer;}
+input.options-transf{background:transparent url(../images/button-transf.png); width:70px; height:21px; border:0px; overflow:hidden; cursor:pointer;}
+input.menu-exit {background:transparent url(../images/menu-exit.png); width:247px; height:35px; border:0px; overflow:hidden; cursor:pointer;}
+input.menu-exit:hover {background:transparent url(../images/menu-exit_.png); width:247px; height:35px; border:0px; overflow:hidden; cursor:pointer;}
+input.menu-hangup {background:transparent url(../images/menu-hangup.png); width:72px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-hangup:hover {background:transparent url(../images/menu-hangup_.png); width:72px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-next {background:transparent url(../images/menu-next.png); width:54px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-next:hover {background:transparent url(../images/menu-next_.png); width:54px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-preview {background:transparent url(../images/menu-preview.png); width:102px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-preview:hover {background:transparent url(../images/menu-preview_.png); width:102px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-dial {background:transparent url(../images/menu-dial.png); width:50px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-dial:hover {background:transparent url(../images/menu-dial_.png); width:50px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-lead {background:transparent url(../images/menu-lead.png); width:283px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-lead:hover {background:transparent url(../images/menu-lead_.png); width:283px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+
+div.menu-div {background:transparent url(../images/menu-div.png); width:2px; height:35px; border:0px; overflow:hidden;}
+div.div {background-image:url(../images/div.png); clear:both; background-repeat:no-repeat; width:818px; height:4px; overflow:hidden;}
+
+select.box {width:250px; border:1px #a6a6a6 solid;}
+input.box {width:250px; border:1px #a6a6a6 solid;}
+input.box-l {width:623px; border:1px #a6a6a6 solid;}
+textarea.box-l {width:623px; height:50px; border:1px #a6a6a6 solid;}
+td.title {width:90px; text-align:left; font-weight:bold;}
+
+/* TABS */
+input.opt-on, a.opt-on, a.opt-on:link, a.opt-on:visited {background:transparent url(../images/opt_out_on.png); background-repeat:no-repeat; width:36px; height:105px; overflow:hidden; margin:0px; border:0px; padding:0px;}
+input.opt-off, a.opt-off, a.opt-off:link, a.opt-off:visited {background:transparent url(../images/opt_out_off.png); background-repeat:no-repeat; width:36px; height:105px; overflow:hidden; margin:0px; border:0px; padding:0px;}
+
+input.stats-on, a.stats-on, a.stats-on:link, a.stats-on:visited {background:transparent url(../images/stats_out_on.png); background-repeat:no-repeat; width:36px; height:107px; overflow:hidden; margin:0px; border:0px; padding:0px;}
+input.stats-off, a.stats-off, a.stats-off:link, a.stats-off:visited {background:transparent url(../images/stats_out_off.png); background-repeat:no-repeat; width:36px; height:107px; overflow:hidden; margin:0px; border:0px; padding:0px;}
+
+input.msg-on, a.msg-on, a.msg-on:link, a.msg-on:visited {background:transparent url(../images/msg_out_on.png); background-repeat:no-repeat; width:36px; height:110px; overflow:hidden; margin:0px; border:0px; padding:0px;}
+input.msg-off, a.msg-off, a.msg-off:link, a.msg-off:visited {background:transparent url(../images/msg_out_off.png); background-repeat:no-repeat; width:36px; height:110px; overflow:hidden; margin:0px; border:0px; padding:0px;}
+
+input.callback-on, a.callback-on, a.callback-on:link, a.callback-on:visited {background:transparent url(../images/callback_out_on.png); background-repeat:no-repeat; width:36px; height:110px; overflow:hidden; margin:0px; border:0px; padding:0px;}
+input.callback-off, a.callback-off, a.callback-off:link, a.callback-off:visited {background:transparent url(../images/callback_out_off.png); background-repeat:no-repeat; width:36px; height:110px; overflow:hidden; margin:0px; border:0px; padding:0px;}
+
+.tableheader {
+	background-color:#333;
+	color:#0CC;
+	padding:2px;
+	font-weight:900;
+        background-color:#E2E4FF;
+        color: #000;
+        border-bottom-color: #FFF !important;
+}
+.tableheadercenter {
+	/*background-color:#333;
+        color:#0CC;*/
+	text-align:center;
+	color: #000;
+        background-color:#E2E4FF;
+	padding:2px;
+	font-weight:900;
+        border-bottom-color: #FFF !important;
+}
+#liveMonitor .tableheadercenter {
+    height:4em;
+}
+.tableitem {
+	background-color:#FFF;
+	color:#000;
+}
+.tableitem_ {
+	background-color:#F0F0F0;
+	color:#000;
+}
+.ui-widget-header {
+	background-image:url(../images/bgslate.gif);
+}
+.ui-widget {
+    font-size:1em;
+}
+.dialogwindow {
+	display:none;
+	position:absolute;
+}
+
+.noTitle .ui-dialog-titlebar {display:none}
+.entryform div {
+    margin-bottom:10px;
+    width: 100%;
+}
+button, input[type=button] {
+    
+    cursor: pointer;
+}
+.entryform label {
+    vertical-align: top;
+}
+.entryform input, .entryform textarea {
+    width:150px;
+    padding: 2px;
+    float: right;
+}
+.entryform select {
+    width:156px;
+    padding: 2px;
+    float: right;
+}
+.entryform .buttons {
+    position:absolute;
+    bottom:5px;
+    margin-bottom:0px;
+    width:auto;
+}
+.entryform .buttons input {
+    position:relative;
+    margin-left:5px;
+    float:left;
+}
+input.ui-button {
+    padding: 0.2em 1em;
+}
+.secnav input {
+    float:left;
+}
+#agentprof.secnav input {
+    float:right;
+}
+.secnav {
+    width:100%;
+    margin-bottom:5px;
+    float:right;
+}
+.clear {
+   clear:both; 
+}
+.entryform div.clear {
+    clear:both;
+}
+.entryform div.dupcheck {
+    float:right;
+    width:50%
+}
+.entryform div.dupcheck input {
+    float:left;
+    width:20px;
+}
+#progress {
+    width:100%;
+    height:25px;
+    border:1px solid #00008B;
+    
+}
+#pbar {
+    height:25px;
+    background-color: #0CC;
+    text-align: center;
+}
+/*uibutton icons*/
+.but_addcamp {background-image: url(/admin/icons/newcampaigns.png)}
+.but_input {
+    width:80px;
+    margin-bottom:10px;
+}
+.ui-menu {
+    /*width:200px;*/
+}
+#editormenu {
+    float:left;
+    width: 17%;
+}
+#scriptform {
+    width:80%;
+    float:left;
+}
+body#tinymce {
+    padding:5px;
+}
+#addoptionimage {
+    float:right;
+    clear:both;
+    text-align:right;
+}
+body#tinymce p.afield {
+    cursor:pointer;
+}
+body#tinymce p.afield:hover {
+    background-color: #0CC;
+}
+#pdetailsdiv {
+    float:left;
+    width: 100%;
+}
+#pdispodiv {
+    float:left;
+    margin-left:10px;
+	width: 78%;
+}
+#pdispovid > table {
+	width: 100%;
+}
+#footer {
+    height:15px;
+    bottom:0px;
+    position:fixed;
+}
+
+element.style {
+    right: -120px;
+}
+#tlyPageGuideWrapper .tlypageguide_toggle:before {
+    display: block;
+    height: 16px;
+    left: -16px;
+    overflow: hidden;
+    position: absolute;
+    text-indent: -999px;
+    top: 6px;
+    width: 16px;
+}
+#tlyPageGuideWrapper .tlypageguide_toggle {
+    -moz-box-sizing: border-box;
+    background: none;
+    border-radius: 3px 0 0 3px;
+    clear: both;
+    color: #FFFFFF;
+    float: right;
+    height: 30px;
+    line-height: 25px;
+    padding: 0 5px 6px;
+    position: fixed;
+    top: 56px;
+    width: 170px;
+    z-index: 9999;
+}
+#upperlogo {
+    float:left; 
+    margin-bottom:5px;
+    line-height:23px;
+    color:#009; 
+    font-weight:bolder;
+    padding-left:5px;
+}
+#tlyPageGuideWrapper .tlypageguide_toggle div {
+    top:4px;
+}
+a {
+    text-decoration: none;
+    color: #103156;
+}
+a:hover{
+    text-decoration:underline;
+    color: #009;
+    
+}
+.campaigntable .actions {
+    width:88px;
+}
+#customdispositions tbody tr {
+    cursor:default
+}
+.dispositionstable tbody tr:hover {
+    background-color: #F0F0F0;
+    color: #000000;
+}
+#userRoles {
+    width: 75%;
+}
+.lm_projectname {
+    font-weight: 900;
+    font-size: 1.1em;
+}
+.formlabel {
+    text-align: left;
+}
+#pdetailsdiv td {
+    padding:3px;
+}
+#pdetailsdiv table tbody tr td[class='1'] {
+    width:30%
+}
+#clientdetailsdiv table tbody tr td[class='1'] {
+    width:30%
+}
+#campsettingsdisplay .ui-button {
+    float:right;
+}
+#campsettingsdisplay select {
+    width: 256px;
+}
+#campsettingsdisplay input[type=text] {
+    width: 250px;
+}
+.clientlist_table select {
+    width: 256px;
+}
+.clientlist_table input[type=text] {
+    width: 250px;
+}
+#agentproftable input[type=text] {
+     width: 250px;
+}
+#agentproftable select {
+     width: 256px;
+}
+#campsettingsdisplay div td {
+    padding:3px;
+    height: 1.8em;
+}
+.campaigntable td {
+        padding:3px;
+    height: 1.6em;
+}
+.tableitem input, .tableitem select {
+    font-size:1em;
+    padding:3px;
+}
+.tableitem_ input, .tableitem_ select {
+    font-size:1em;
+    padding:3px;
+}
+#footer a {
+    background-color: #FFF;
+}
+#tlyPageGuideWrapper {
+    display:none;
+}
+.objcol {
+    background-color: #E2E4FF;
+}

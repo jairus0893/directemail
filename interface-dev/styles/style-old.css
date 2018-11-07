@@ -1,0 +1,33 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {margin:0px; border:0px; padding:0px; background-image:url(../images/bg.jpg); background-repeat:repeat; font-family:Tahoma;}
+form {margin:0px; border:0px; padding:0px;}
+none {margin:0px; border:0px; padding:0px; overflow:hidden;}
+
+input.dial {background-image:url(../images/dial.jpg); width:429px; height:27px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.dial:hover {background-image:url(../images/dial_.jpg); width:429px; height:27px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.script {background-image:url(../images/script.jpg); width:429px; height:27px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.script:hover {background-image:url(../images/script_.jpg); width:429px; height:27px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+
+input.menu-exit {background:transparent url(../images/menu-exit.png); width:247px; height:35px; border:0px; overflow:hidden; cursor:pointer;}
+input.menu-exit:hover {background:transparent url(../images/menu-exit_.png); width:247px; height:35px; border:0px; overflow:hidden; cursor:pointer;}
+input.menu-hangup {background:transparent url(../images/menu-hangup.png); width:72px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-hangup:hover {background:transparent url(../images/menu-hangup_.png); width:72px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-next {background:transparent url(../images/menu-next.png); width:54px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-next:hover {background:transparent url(../images/menu-next_.png); width:54px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-preview {background:transparent url(../images/menu-preview.png); width:102px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-preview:hover {background:transparent url(../images/menu-preview_.png); width:102px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-dial {background:transparent url(../images/menu-dial.png); width:50px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-dial:hover {background:transparent url(../images/menu-dial_.png); width:50px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-lead {background:transparent url(../images/menu-lead.png); width:283px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+input.menu-lead:hover {background:transparent url(../images/menu-lead_.png); width:283px; height:35px; border:0px; display:block; overflow:hidden; cursor:pointer;}
+
+div.menu-div {background:transparent url(../images/menu-div.png); width:2px; height:35px; border:0px; overflow:hidden;}
+div.div {background-image:url(../images/div.png); clear:both; background-repeat:no-repeat; width:818px; height:4px; overflow:hidden;}
+
+select.box {width:250px; border:1px #a6a6a6 solid;}
+input.box {width:250px; border:1px #a6a6a6 solid;}
+input.box-l {width:623px; border:1px #a6a6a6 solid;}
+textarea.box-l {width:623px; height:50px; border:1px #a6a6a6 solid;}
+td.title {width:90px; text-align:left; font-weight:bold;}

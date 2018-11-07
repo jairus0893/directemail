@@ -1,0 +1,128 @@
+@charset "utf-8";
+/* CSS Document */
+
+#actionpanel {
+	width:200px; 
+	height:80px; 
+	position:absolute;
+	right:10px; 
+	background-color:#FFF; 
+	border:1px solid #30C;
+	text-align:left;
+	padding:10px;
+	display:none;
+}
+
+#actionpanel span {
+	color:#00F;
+}
+#actionpanel span:hover {
+	color:#39F;
+	cursor:pointer;
+}
+span.closepanel a{
+	font-family:Tahoma;
+	font-size:8pt;
+}
+.closepanel {
+	
+	cursor:pointer;
+	position:absolute;
+	right:10px;
+	top:5px;
+}
+.panels {
+	width:400px;
+	height:200px;
+	position:absolute;
+	border:1px solid #00f;
+	left: 259px;
+	top: 138px;
+	background-color:#fff;
+	font-family:Tahoma;
+	font-size:8pt;
+	padding:10px;
+}
+#panel1 {
+	display:none;
+}
+#panel2 {
+	display:none;
+}
+#panel3 {
+	width:702px;
+	height:440px;
+	position:absolute;
+	display: none;
+	border:1px solid #00f;
+	left: 274px;
+	top: 105px;
+	background-color:#fff;
+	font:Tahoma;
+	font-size:8pt;
+	padding:10px;
+	
+}
+#leaddetail {
+	width:700px;
+	font:Tahoma;
+	font-size:8pt;
+}
+#leaddetail input, #leaddetail textarea {
+	font-family:Tahoma;
+	font-size:8pt;
+}
+tr.entry:hover {
+	background-color:#00C;
+	color:#FFF;
+	cursor:pointer;
+}
+#ld {
+	position:absolute;
+	width: 703px;
+	height: 347px;
+	left: 13px;
+	top: 42px;
+}
+#cd {
+	position:absolute;
+	width: 437px;
+	height: 189px;
+	left: 147px;
+	top: 117px;
+	display: none;
+	background-color:#FFF;
+	border:1px solid #39F;
+	padding:10px;
+	font-family:Tahoma;
+	font-size:8pt;
+}
+
+
+#buypack {
+	font-family: Tahoma;
+	font-size:8pt;
+	width:400px;
+	height:300px;
+}
+
+#results {
+	width:82%;
+	position:relative;
+	float:left;
+}
+.clear {
+	clear:both;
+}
+
+.message {
+	font-size:12px;
+	color:#F00;
+	font-weight:900;
+}
+.red {
+	color:#F00;
+}
+.green {
+	color:#0F0;
+}

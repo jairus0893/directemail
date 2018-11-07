@@ -1,0 +1,36 @@
+<?php
+extract($_REQUEST);
+$disp = '';
+$disp .= '{';
+$disp .= 'Dialmode:'.$dialmode.', ';
+$disp .= 'Campaign:'.$projid.', ';
+$disp .= 'Extension:'.$extension.', ';
+$disp .= 'UserID:'.$uid.', ';
+$disp .= 'LeadID:'.$leadid.', ';
+$disp .= 'LID:'.$lid.', ';
+$disp .= 'ListID:'.$list.', ';
+$disp .= 'Name:'.$cname.', ';
+$disp .= 'First Name:'.$cfname.', ';
+$disp .= 'Last Name:'.$clname.', ';
+$disp .= 'Title:'.$title.', ';
+$disp .= 'Position Title:'.$positiontitle.', ';
+$disp .= 'Company:'.$company.', ';
+$disp .= 'Industry:'.$industry.', ';
+$disp .= 'SIC:'.$sic.', ';
+$disp .= 'Phone:'.$phone.', ';
+$disp .= 'Alt Phone:'.$altphone.', ';
+$disp .= 'Mobile:'.$mobile.', ';
+$disp .= 'Email:'.$email.', ';
+$disp .= 'Address 1:'.$address1.', ';
+$disp .= 'Address 2:'.$address2.', ';
+$disp .= 'City/Suburb:'.$city.', ';
+$disp .= 'Postal Code:'.$zip.', ';
+$disp .= 'State:'.$state.', ';
+$disp .= 'Country:'.$country.', ';
+$disp .= 'Comments:'.$comments.', ';
+$disp .= 'Disposition:'.$disposition.', ';
+$disp .= 'Notes:'.$NOTES.', ';
+$disp .= 'Custom Data:'.$CUSTOM_FIELDS;
+$disp .= '}';
+echo $disp;
+?>
