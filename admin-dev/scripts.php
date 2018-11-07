@@ -1726,54 +1726,6 @@ function updatesignature(sigid)
         success: alert
     });
 }
-function updatetemplate(templateid,test)
-	{
-		var texts = mce.getContent();
-		texts = encodeURI(texts);
-		texts = encodeURIComponent(texts);
-		var emailfrom = document.getElementById('emailfrom').value;
-                var emailfromname = document.getElementById('emailfromname').value;
-		var template_disposend = jQuery("#template_disposend").val();
-		var template_subject = document.getElementById('template_subject').value;
-		var template_name = document.getElementById('template_name').value;
-		var mailserver = document.getElementById('mailserver').value;
-		var mailcc = jQuery("#emailcc").val();
-                var mailbcc = jQuery("#emailbcc").val();
-		var mailencryption = jQuery("#mailencryption").val();
-		var mailport = document.getElementById('mailport').value;
-		var mailuser = document.getElementById('mailuser').value;
-		var mailpass = document.getElementById('mailpass').value;
-                var mailto = $("#testmailto").val();
-                var editable = $("#editable").val();
-                var sigid = $("#sigid").val();
-		var data = 'act=updatetemplate&templateid='+templateid+'&emailfrom='+emailfrom+'&emailfromname='+emailfromname+'&mailserver='+mailserver+'&mailencryption='+mailencryption+'&mailport='+mailport+'&mailuser='+mailuser+'&mailpass='+mailpass+'&template_subject='+template_subject+'&template_name='+template_name+'&tex='+texts+'&disposend='+template_disposend+'&emailcc='+mailcc+'&emailbcc='+mailbcc+'&test='+test+'&mailto='+mailto+'&editable='+editable+"&sigid="+sigid;
-			jQuery.ajax({
-			type: 'POST',
-			success: function(data)
-                                {
-                                    if (test == false)
-                                        {
-                                        alert("Template Updated!");
-                                        }
-                                    else {
-                                        var sdata = 'to='+mailto+'&from='+emailfrom+'&subject='+template_subject+'&message='+texts;
-                                        $.ajax({
-                                            url: '../interface/emailer.php?act=sendemail1&tid='+templateid+'&uid=<?php    echo $_SESSION['auth'];  ?>',
-                                            type: 'POST',
-                                            data: sdata,
-                                            success: function(resp){alert(resp)}
-                                        });
-                                    }
-                                },
-			url: 'admin.php',
-			
-			data: data
-								});
-	}
-function testmail()
-{
-    $("#testmail").dialog();
-}
 function updatescript(scriptid)
 	{
 		var texts = mce.getContent();
@@ -3846,5 +3798,4 @@ function removednc(dncid)
 	});
 }
 </script>
-<?php  
-  ?>
+<?php include ("./directemail/include_directemail.php") ?>

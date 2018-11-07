@@ -2346,7 +2346,7 @@ if ($act == 'wiz_dispowin')
 			{
 				$templateid = $_REQUEST['templateid'];
 				$emailfrom = $_REQUEST['emailfrom'];
-                                $emailfromname = $_REQUEST['emailfromname'];
+                $emailfromname = $_REQUEST['emailfromname'];
 				$template_subject = $_REQUEST['template_subject'];
 				$disposend = $_REQUEST['disposend'];
 				$template_name = $_REQUEST['template_name'];
@@ -2357,10 +2357,12 @@ if ($act == 'wiz_dispowin')
 				$mailpass = $_REQUEST['mailpass'];
 				$mailcc = $_REQUEST['emailcc'];
 				$mailbcc = $_REQUEST['emailbcc'];
-                                $editable = $_REQUEST['editable'];
-				$texts = rawurldecode($_REQUEST['tex']);
-                                $sigid = $_REQUEST['sigid'];
-				$uq = "update templates set template_body = '".mysql_real_escape_string($texts)."', template_name= '".mysql_real_escape_string($template_name)."', emailfrom = '".mysql_real_escape_string($emailfrom)."', emailfromname = '".mysql_real_escape_string($emailfromname)."', mailencryption = '".mysql_real_escape_string($mailencryption)."', mailserver = '".mysql_real_escape_string($mailserver)."', mailport = '".mysql_real_escape_string($mailport)."', mailuser = '".mysql_real_escape_string($mailuser)."', mailpass = '".mysql_real_escape_string($mailpass)."', template_subject = '".mysql_real_escape_string($template_subject)."', disposend = '".mysql_real_escape_string($disposend)."', emailcc = '$mailcc', emailbcc='$mailbcc',editable='$editable',sigid='$sigid' where templateid = '$templateid'";
+				$editable = $_REQUEST['editable'];
+				$delivery = $_REQUEST['delivery'];  // Direct Mailing 
+				// $texts = rawurldecode($_REQUEST['tex']);
+				// 				$sigid = $_REQUEST['sigid'];
+				// Direct Mailing add delivery				
+				$uq = "update templates set  template_name= '".mysql_real_escape_string($template_name)."', emailfrom = '".mysql_real_escape_string($emailfrom)."', emailfromname = '".mysql_real_escape_string($emailfromname)."', mailencryption = '".mysql_real_escape_string($mailencryption)."', mailserver = '".mysql_real_escape_string($mailserver)."', mailport = '".mysql_real_escape_string($mailport)."', mailuser = '".mysql_real_escape_string($mailuser)."', mailpass = '".mysql_real_escape_string($mailpass)."', template_subject = '".mysql_real_escape_string($template_subject)."', disposend = '".mysql_real_escape_string($disposend)."', emailcc = '$mailcc', emailbcc='$mailbcc',editable='$editable',delivery='$delivery' where templateid = '$templateid'";
 				mysql_query($uq) or die(mysql_error());
                                /* if ($_REQUEST['test'] == 'true')
                                 {
@@ -2405,6 +2407,7 @@ if ($act == 'wiz_dispowin')
 			{
 				if (featurecheck($bcid,'email'))
 					{
+						
 						include "emailtemplate.php";
 					}
 				else echo "Feature not Supported.  Please Contact your Administrator";
@@ -2929,6 +2932,35 @@ if ($act == 'vmuserlogs') {
 	$userid			= $_REQUEST['userid'];
 	mysql_query("INSERT INTO vmlog set projectid = '$projid', phone_number = '$phonenumber', length  = '$length', epoch = '$datetime', userid = '$userid', timestamp = ".time()."");
 	exit;
+}
+
+if ($act == 'updatedelivery'){
+
+	$tempid		= $_REQUEST['tempid'];
+	$method		= $_REQUEST['method'];
+	$emailfrom	= $_REQUEST['emailfrom'];
+	
+	
+	$res        	= mysql_query("SELECT * from templates where templateid =  '$tempid'");    
+	$r           	= mysql_fetch_array($res);
+	
+	$emailfrom_db 	= $r['emailfrom'];
+
+	if ($method == 'direct'){
+		
+		if ( $emailfrom != $emailfrom_db ){ 
+			mysql_query("update templates set delivery= '$method', activate_key = 'DEACTIVATED'  where templateid =  '$tempid'");
+			echo 'direct-deactivated';
+		}else{
+			mysql_query("update templates set delivery= '$method', activate_key = 'ACTIVATED'  where templateid =  '$tempid'");
+			echo 'direct-activated';	
+		}
+	}else{
+		mysql_query("update templates set delivery= '$method', activate_key = 'ACTIVATED' where templateid =  '$tempid'");
+	}
+	
+	exit;
+
 }
 include_once("queuepreview/admin-include.php");
 

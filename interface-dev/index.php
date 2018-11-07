@@ -82,7 +82,7 @@ if (!$session->userid)
 $userid = $session->userid;
 $bcid = $_SESSION['bcid'];
 
-$templateres = mysql_query("SELECT templateid from templates where projectid = '$session->projectid'");
+$templateres = mysql_query("SELECT templateid, disposend from templates where projectid = '$session->projectid'");  // Direct Mailing add disposend
 $trow = mysql_fetch_array($templateres);
 $withemail = $trow['templateid'];
 $bcdetailsres = mysql_query("SELECT * from bc_clients where bcid = '".$_SESSION['bcid']."'");
@@ -174,9 +174,19 @@ $ci = rtrim($getclient_contactid, ",");
 <script type="text/javascript" src="../admin/ext/adapter/jquery/ext-jquery-adapter.js"></script>
 <script type="text/javascript" src="../admin/ext/ext-core.js"></script>
 <script type="text/javascript" src="../admin/ext/ext-custom.js"></script>
+<script type="text/javascript" src="../admin/ext/ext-all.js"></script>
+
+<!-- *****EMAIL TEMPLATE HTML EDITOR PLUGINS -->
+<link rel="stylesheet" type="text/css" href="ExtJS/emailtemplateeditor/styles/htmleditor.css"/>   
+<script src="ExtJS/emailtemplateeditor/plugins/Ext.ux.form.HtmlEditor.MidasCommand.js"></script>
+<script src="ExtJS/emailtemplateeditor/plugins/imageupload.js"></script> 
+<script src="ExtJS/emailtemplateeditor/plugins/data-view-plugins.js"></script> 
+<script src="ExtJS/emailtemplateeditor/plugins/Ext.ux.form.HtmlEditor.UndoRedo.js"></script>
+<script src="ExtJS/emailtemplateeditor/plugins/Ext.ux.form.HtmlEditor.Plugins.js"></script> 
+<script src="ExtJS/emailtemplateeditor/plugins/chooser.js"></script> 
+<!-- End --> 
 
 <script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-
 <script type="text/javascript" src="../jquery/js/jquery-ui-1.8.12.custom.min.js"></script>
 <script type="text/javascript" src="../jquery/js/blockui.js"></script>
 <script type="text/javascript" src="../jquery/js/jquery.ui.selectmenu.js"></script>
@@ -247,6 +257,7 @@ function login_softphone_and_portal() {
     window.name = 'startwindow';
 }
 </script>
+<script src="ExtJS/emailtemplateeditor/js/emaileditor.js"></script>
 <?
 //include "ajax.php";
 echo "<script>var dialmode = '$ispred';</script>";
@@ -342,6 +353,8 @@ if ($dialmode == 'inbound')
             <input type="hidden" name="_USERID_" value="<?php echo $session->userid ?>">
             <input type="hidden" name="_ACT_" value="SWITCHCAMPAIGN">
             <input type="hidden" name="_CAMPAIGN_MODE_" value="<?=$pswitch[$_REQUEST['projid']]['dialmode']?>">
+            <input type="hidden" id="template_disposend" name="template_disposend" value="<?php echo $trow['disposend']; ?>" >   <!--add for Direct Mailing--> 
+            <input type="hidden" id='clientid' name="clientid" value="<? echo $clientid ?>">
         </form></div>
     <?
     }

@@ -140,6 +140,7 @@ if ($act == 'gettemplate') {
 	$cname 			= $_REQUEST['cname'];
 	$cfname 		= $_REQUEST['cfname'];
 	$emailadd 		= $_REQUEST['email'];
+	$clientid		= $_REQUEST['clientid'];
 	$mailmerge 		= json_decode($_REQUEST['mailmerge'],true);
 	
 	$usercreds 		= getdatatable("members where userid = ".$_SESSION['uid'], "userid");
@@ -148,6 +149,16 @@ if ($act == 'gettemplate') {
 	$userdetail 	= $userdetails[$_SESSION['uid']];
 	$leadres 		= mysql_query("SELECT * from leads_raw where leadid = '$currentlead'");
 	$lead 			= mysql_fetch_assoc($leadres);
+	$clientdetails 	= getdatatable("clients where clientid = ".$clientid, "clientid");
+	$clientdetail 	= $clientdetails[$clientid];
+
+
+
+	$customfieldres = mysql_query("SELECT * from leads_custom_fields where leadid = ".$currentlead."");
+	$customfieldrow = mysql_fetch_assoc($customfieldres);
+	$cfields        = json_decode($customfieldrow['customfields'], true);
+
+	
 	
     foreach ($mailmerge as $mm) {
         $lead[$mm['name']] = $mm['value'];
@@ -161,6 +172,8 @@ if ($act == 'gettemplate') {
 	$attachments 	= explode(",",$trow['attachments']);
 	$b 				= $trow['template_body'];
     $b 				.= '<br /><div id="signature">'.$sig['signature_body'].'</div>';
+
+	
 
 	if ( $cname != '' && $cfname == '' ) {
 		foreach ($fields as $f) {
@@ -190,14 +203,34 @@ if ($act == 'gettemplate') {
 			}
 		}
 	}
+
+
+	// Custom Fields
+	foreach ($cfields as $key => $value) {
+		if ($value != '' ){
+			$b = str_replace("[custom-$key]",$value,$b);
+		}else{
+			$b = str_replace("[custom-$key]"," ",$b);		
+		}
+	}
+
 	
+
     foreach ($userdetail as $key=>$val) {
-        $b = str_replace("[agent-$key]",$val,$b);
+		$b = str_replace("[agent-$key]",$val,$b);
     }
 	
     foreach ($usercred as $key=>$val) {
-        $b = str_replace("[agent-$key]",$val,$b);
+		$b = str_replace("[agent-$key]",$val,$b);
+	
+	}
+	
+	foreach ($clientdetail as $key=>$val) {
+		$b = str_replace("[client-$key]",$val,$b);
     }
+	
+	
+
     
 	$templistres = mysql_query("SELECT * from templates where projectid = '".$trow['projectid']."'");
 	while ( $lrow = mysql_fetch_array($templistres) ) {
@@ -205,6 +238,7 @@ if ($act == 'gettemplate') {
 		$toptions .= '<option value="'.$lrow['templateid'].'">'.$lrow['template_name'].'</option>';
 	}
 	?>
+
 	<script>
 		$( "#upload" ).change(function(e) {
 			var fileName = e.target.files[0].name;
@@ -234,9 +268,10 @@ if ($act == 'gettemplate') {
      <?php include("emailtemplate/emailer-include-cc.php") ?>
      <tr>
      	<td class="title">Email From:</td>
-     	<td align="left"><input type="hidden"  name="emailfrom" id="emailfrom" value="<?=$trow['emailfrom'];?>" />
+     	<td align="left"><input type="hidden" name="emailfrom" id="emailfrom" value="<?=$trow['emailfrom'];?>" />
             <input type="hidden" id="editable" name="editable" value="<?=$trow['editable'];?>" />
-		
+			<input type="hidden" id="delivery" name="delivery" value="<?=$trow['delivery'];?>" />  <!-- Direct Mailing  -->
+			<input type="hidden" id="activationcode" name="activationcode" value="<?=$trow['activate_key'];?>" />
             <?=$trow['emailfrom'];?>
             </td>
      </tr>
@@ -258,43 +293,43 @@ if ($act == 'gettemplate') {
         </td>
      </tr>
      <tr>
-     	<?php include("emailtemplate/emailer-include.php") ?>
-     	<td class="title">Attachments:</td>
-     	<td align="left">
- 		<div id="filenames">
-		</div>
-        <span id="atts">
-        <?php
-		$ct = 0;
-		foreach ($attachments as $attachment) {
-			if (strlen($attachment) > 0) {
-			$ct++;
-			?>
-	        <div id="div_<?=$ct;?>" class="attachments"><a href="../attachments/<?=$attachment;?>"><?=$attachment;?></a> | <a  href="#" onclick="removeattachment('<?=$tempid;?>','<?=$attachment;?>','<?=$ct;?>')">Remove</a></div>
-	        <?
-			}
-		}
-		?>
-        </span>
+
+	 <?php include("emailtemplate/emailer-include.php") ?>
         <form enctype="multipart/form-data" method="POST" action="emailtemplate/emailtabuploader.php" target="uplo2" id="formattachment">
 			<input type="hidden" name="templateid" value="<?=$tempid;?>" />
 			<input type="hidden" name="act" value="attach" />
 			<input type="hidden" name="bcid" value="<?=$bcid;?>" />
 			<input type="hidden" name="projectid" value="<?=$projectid;?>" />
 			<input type="hidden" name="leadid" value="<?=$currentlead;?>" />
-			Attach File: <input id="upload" name="cfile" type="file" style="font-size:10px; height:20px; padding-bottom:8px; position:relative; left:25px"/>
+			<!-- Attach File: <input id="upload" name="cfile" type="file" style="font-size:10px; height:20px; padding-bottom:8px; position:relative; left:25px"/> -->
 		</form>
         <iframe name="uplo2" width="0" height="0" style="display:none"></iframe>
 		</td>
      </tr>
      <tr>
      	<td class="title">Message:</td><td style="font-size: 10pt">(<?php echo $trow['editable'] == 1 ? "Editable":"Not Editable";?>)</td></tr>
-     <tr>
-     	<td align="left" colspan="2"><textarea name="emailbody" id="emailbody" class="box-1" value=""  style="width:700px; height:200px;"/><?=$b;?></textarea></td>
+     
+	 
+	 <tr>
+	    <textarea name="emailbody" id="emailbody" class="box-1" value=""  style="width:700px; height:200px; display:none"/><?=$b;?></textarea>
+     	<td align="left" colspan="2">	
+	 		<div id="templateeditor"></div>
+    		<iframe onLoad="editor('<?=$tempid;?>','<?=$bcid;?>','<?=$projectid;?>')" style="display:none;"></iframe>
+		 </td>
      </tr>
+
+
      <td colspan="2">
-      <a href="#" id="sendemailbut" onclick="agent_sendemail('<?=$tempid;?>', '<?=$bcid;?>')">Send</a></td>
-      </tr></table>
+      <a href="#" style="" id="sendemailbut" onclick="agent_sendemail('<?=$tempid;?>', '<?=$bcid;?>')">Send</a>
+
+	  </td>
+
+      </tr>
+	  
+	  
+	  </table>
+
+
     <?
 	exit;
 }

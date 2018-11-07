@@ -380,38 +380,42 @@ if ($act == 'search' || $act == 'newexport') {
                 if ($vals[1] > 0) {
                     if ($key != 'projectid') {
                         $headers[$key] = $vals[0];
-                        if ($key == 'assigned') {
-                            $aval = $result['assigned'] > 0 ? $agents[$result['assigned']] : '';
-                        } elseif ($key == 'epoch_timeofcall' || $key == 'epoch_callable') {
-                            $aval = $result[$key] > 0 ? date('Y-m-d H:i:s', $result[$key]) : '';
-                        } elseif ($key == 'approvedby') {
-                            $aval = !empty($memberdetailsrecord['afirst']) ? $memberdetailsrecord["afirst"]." ".$memberdetailsrecord["alast"] : '';
-                        } elseif ($key == 'approvedto') {
-                            $aval = !empty($clientcontactrecord['firstname']) ? $clientcontactrecord["firstname"]." ".$clientcontactrecord["lastname"] : '';
-                        } elseif ($key == 'assignedby') {
-                            $aval = !empty($abclientcontactrecord['firstname']) ? $abclientcontactrecord["firstname"]." ".$abclientcontactrecord["lastname"] : '';
-                        } elseif ($key == 'assignedto') {
-                            $aval = !empty($atclientcontactrecord['firstname']) ? $atclientcontactrecord["firstname"]." ".$atclientcontactrecord["lastname"] : '';
-                        } elseif ($key == 'clientdispo') {
-                            $aval = !empty($clientrecord['statusname']) ? $clientrecord["statusname"] : '';
-                        } elseif ($key == 'note') {
-	                        $notes = json_decode($result[$key],true);
-			                $agentnotes = '';
-			                foreach ($notes as $note)
-			                {
-			                    $agentnotes .= "[".$note['user']."[".date("Y-m-d H:i:s",$note['timestamp'])."]:".$note['message']."]<br/>";
-			                }
-	                        $aval = !empty($agentnotes) ? $agentnotes : '';
-						} else {
-	                        $aval = $result[$key];
-	                    }
-                        $rows[$result['leadid']][$key] = $aval;
+                    if ($key == 'assigned') {
+                        $aval = $result['assigned'] > 0 ? $agents[$result['assigned']] : '';
+                    } elseif ($key == 'epoch_timeofcall' || $key == 'epoch_callable') {
+                        $aval = $result[$key] > 0 ? date('Y-m-d H:i:s', $result[$key]) : '';
+                    } elseif ($key == 'approvedby') {
+                        $aval = !empty($memberdetailsrecord['afirst']) ? $memberdetailsrecord["afirst"]." ".$memberdetailsrecord["alast"] : '';
+                    } elseif ($key == 'approvedto') {
+                        $aval = !empty($clientcontactrecord['firstname']) ? $clientcontactrecord["firstname"]." ".$clientcontactrecord["lastname"] : '';
+                    } elseif ($key == 'assignedby') {
+                        $aval = !empty($abclientcontactrecord['firstname']) ? $abclientcontactrecord["firstname"]." ".$abclientcontactrecord["lastname"] : '';
+                    } elseif ($key == 'assignedto') {
+                        $aval = !empty($atclientcontactrecord['firstname']) ? $atclientcontactrecord["firstname"]." ".$atclientcontactrecord["lastname"] : '';
+                    } elseif ($key == 'clientdispo') {
+                        $aval = !empty($clientrecord['statusname']) ? $clientrecord["statusname"] : '';
+                    } elseif ($key == 'note') {
+                        $notes = json_decode($result[$key],true);
+                        $agentnotes = '';
+                        foreach ($notes as $note)
+                        {
+                            $agentnotes .= "[".$note['user']."[".date("Y-m-d H:i:s",$note['timestamp'])."]:".$note['message']."]<br/>";
+                        }
+                        $aval = !empty($agentnotes) ? $agentnotes : '';
+    } else {
+                        $aval = $result[$key];
                     }
+                    $rows[$result['leadid']][$key] = $aval;
                 }
+            }
             }
         } else {
             if (!empty($result['leadid'])) {
                 $projectnames = projectnames($bcid);
+                
+                $clientidres = mysql_query("SELECT clientid from projects where projectid = '".$result['projectid']."' ");
+                $clientidrow = mysql_fetch_assoc($clientidres);
+                $clientid = $clientidrow['clientid'];	
                 
                 $rows[$result['leadid']]['bulk'] = '<input type="checkbox" name="bulkaction" value="' . $result['leadid'] . '"> &nbsp;';
                 $_debug                          = sprintf("%s-%s-%s-%s\n", $recordingproject[$result['leadid']], $result['leadid'], $projects[$recordingproject[$result['leadid']]]['linkurl']);
@@ -457,7 +461,7 @@ if ($act == 'search' || $act == 'newexport') {
 	                    } elseif ($key == 'assignedto') {
 	                        $aval = !empty($atclientcontactrecord['firstname']) ? $atclientcontactrecord["firstname"]." ".$atclientcontactrecord["lastname"] : '';
 	                    } elseif ($key == 'clientdispo') {
-	                        $aval = !empty($clientrecord['statusname']) ? $clientrecord["statusname"] : '';
+                            $aval = !empty($clientrecord['statusname']) ? $clientrecord["statusname"] : '';
                         } elseif ($key == 'projectid') {
 	                        $aval = !empty($projectnames[$result['projectid']]) ? $projectnames[$result['projectid']] : '';
 						} elseif ($key == 'note') {
@@ -468,7 +472,7 @@ if ($act == 'search' || $act == 'newexport') {
 			                    $agentnotes .= "[".$note['user']."[".date("Y-m-d H:i:s",$note['timestamp'])."]:".$note['message']."]<br/>";
 			                }
 	                        $aval = !empty($agentnotes) ? $agentnotes : '';
-						} else {
+                        } else {
                             $aval = $result[$key];
                         }
                         $rows[$result['leadid']][$key] = $aval;
@@ -477,7 +481,7 @@ if ($act == 'search' || $act == 'newexport') {
                 $rows[$result['leadid']]['options'] = 'title="' . $result['resultcomments'] . '" onclick="getlead(\'' . $result['leadid'] . '\',\'' . $start . '\',\'' . $end . '\')"';
                 $rows[$result['leadid']]['actions'] = '<a href="#" onclick="lastrecording(\'' . $result['leadid'] . '\')" title="Play Recording" style="display:none"><img src="../icons/recorded.png" /></a>
                 <a href="#" onclick="qacall(\'' . $result['leadid'] . '\',event)" title="Call" ><img src="../icons/dial.png" /></a>
-                <a href="#" onclick="qamail(\'' . $result['leadid'] . '\',event)" title="Email to Client"><img src="../icons/mail.png" /></a>   
+                <a href="#" onclick="emaillead(\'' . $result['leadid'] . '\',\'' . $result['projectid'] . '\',\'' . $clientid . '\',\'' . $bcid . '\')" title="Email to Client"><img src="../icons/mail.png" /></a>   
                 ';
                 
             }
@@ -493,39 +497,26 @@ if ($act == 'search' || $act == 'newexport') {
         $dcont              = '<div id="searchresults">' . tablegen($headers, $rows, "100%") . '</div>';
     }
 }
-if ($act == 'emailtoclient')
-{
-    $body = $_POST['htmlbody'];
-    $emailto = $_REQUEST['to'];
-    $subject = $_REQUEST['subject'];
-    $record = getrecord($_REQUEST['leadid']);
-    $lead = $record['info'];
-    $projectname = projects::getprojectname($lead['projectid']);
-    if (strlen($subject) < 1)
-    {
-        $subject = 'Sent from '.$projectname;
-    }
-    $body = str_replace("<input ", "<input disabled  ", $body);
-    $body = str_replace("<select ", "<select disabled  ", $body);
-    if ($lead["status"] != "approved") {
-        $body = str_replace("Download", "", $body);
-    }
-    $body .= '<p>Powered by BlueCloud.</p>';
-    $bcres = mysql_query("SELECT * from bc_clients where bcid ='$bcid'");
-    $bc = mysql_fetch_assoc($bcres);
-    $emailer = new Mailer();            
-    $emailer->set_mail("noreply@bluecloudaustralia.com.au",$emailto,$subject,$body);
-    $emailer->fromName($bc['company']);
-    $sent = $emailer->send_mail();
-	if ($sent == true) {
-		$record = new records($_REQUEST['leadid']);
-		$record->addnote("System","Emailed by ".$_SESSION['username'].": Successful");
-	} else {
-		$record = new records($_REQUEST['leadid']);
-		$record->addnote("System","Emailed by ".$_SESSION['username'].": Failed");
-	}
-    exit;
-}
+// if ($act == 'emailtoclientnew')
+// {
+
+//     $tid = $_REQUEST['templateid'];
+
+//     $res            = mysql_query("SELECT * from templates where templateid = '$tid'");
+//     $row            = mysql_fetch_array($res);
+
+//     $templatebody   = $row['template_body'];
+//     $templatename   = $row['template_name'];
+  
+
+//     echo $templatebody;
+
+    
+
+    
+
+    
+// }
 if ($act == 'getlead' || $act == 'emailtoclient')
 	{
 		$startdate = $_REQUEST["startdate"];
@@ -598,13 +589,28 @@ if ($act == 'getlead' || $act == 'emailtoclient')
 		elseif ($act != 'emailtoclient' && !isset($_REQUEST['export']) ) {
                     //| <a href="qa.php?act=getlead&leadid=<?php echo $_REQUEST['leadid'];&export">Export</a> 
 		?>
-        <a href="#" onClick="saveleadforqa()">Save</a> | <a href="#" onClick="printdiv()" id="printlink">Print</a> | <a href="#" onclick="emaillead('<?php echo $lead['leadid'];?>')">Email</a> |
+        <a href="#" onClick="saveleadforqa()">Save</a> | <a href="#" onClick="printdiv()" id="printlink">Print</a> | <a href="#" onclick="emaillead('<?php echo $lead['leadid'];?>','<?php echo $lead['projectid']; ?>','<?php echo $clientid; ?>','<?php echo $bcid;?>','<?php echo $_SESSION['username'];?>')">Email</a> |
+        <?php
+
+            $templistres = mysql_query("SELECT * from templates where projectid = '".$lead['projectid']."'");
+            while ( $lrow = mysql_fetch_array($templistres) ) {
+                $tlist[$lrow['templateid']] = $lrow;
+                $toptions .= '<option value="'.$lrow['templateid'].'">'.$lrow['template_name'].'</option>';
+            }
+
+        ?>
+        
         <div id="emailcontacts<?php echo $lead['leadid'];?>" class="dialogform">
-        Select Recipient:
-        <select name="emailtoclient"><option></option><?php echo $cdrop;?></select><br>
-        Subject: <input type="text" name="subject" placeholder="<?php echo $projectname;?>">
-        <br /><a href="#" onclick="sendemailtoclient()" id="setc">Send</a>
+           <input type="hidden" id="qadelivery" name="qadelivery">
+            Select Template:
+            <select name="emailtemplate" style="width: 152px;" onchange="ChangeTemplate(this)"><option></option><?=$toptions;?></select><br>
+            Select Recipient:
+            <select name="emailtoclient"><option></option><?php echo $cdrop;?></select><br>
+            Subject: <input type="text" name="subject" id="lead_subject" value = ""  style="margin-left: 50px; width: 153px;">
+            <br /><a href="#" onclick="sendemailtoclient()" id="setc">Send</a>
+
         </div>
+
         <?php 
                 }
         if ($act == 'emailtoclient' || isset($_REQUEST['export'])) ob_start();
@@ -957,7 +963,7 @@ if ($act == 'getlead' || $act == 'emailtoclient')
         }
         if ($act =='emailtoclient')
         {
-            $body = ob_get_contents();
+             $body = ob_get_contents();
             $emailto = $_REQUEST['to'];
             $subject = $_REQUEST['subject'];
             if (strlen($subject) < 1)
@@ -973,12 +979,19 @@ if ($act == 'getlead' || $act == 'emailtoclient')
             $emailer->set_mail("noreply@bluecloudaustralia.com.au",$emailto,$subject,$body);
             $emailer->fromName($bc['company']);
             echo $emailer->send_mail();
-            exit;
+            exit; 
+
+
+
+
+
+
+
         }
         if (!isset($_REQUEST['export']))
 		{
 			?>
-        <a href="#" onClick="saveleadforqa()">Save</a> | <a href="#" onClick="printdiv()" id="printlink">Print</a> | <a href="#" onclick="emaillead('<?php echo $lead['leadid'];?>')">Email</a> |
+        <a href="#" onClick="saveleadforqa()">Save</a> | <a href="#" onClick="printdiv()" id="printlink">Print</a> | <a href="#" onclick="emaillead('<?php echo $lead['leadid'];?>','<?php echo $lead['projectid']; ?>','<?php echo $clientid; ?>','<?php echo $bcid;?>')">Email</a> |
         <?php
 		}
 		exit();

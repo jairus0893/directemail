@@ -37,7 +37,7 @@ if ($act == "applycustomizeview") {
 		if ( $value == "epoch_timeofcall") 
 		{
 			$result[$value] = array( 'Date', 1 );		
-		}		
+        }	
 		if ( $value == "projectid") 
 		{
 			$result[$value] = array( 'Campaign Name', 1 );		
@@ -238,9 +238,19 @@ if ($act == "showinactivecampaign") {
 <link href="qaver.css" rel="stylesheet" type="text/css" />
 <script src="../../jquery/js/jquery.multiselect.js"></script>
 <link href="../../jquery/css/jquery.multiselect.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="../ext/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="../ext/resources/css/xtheme-slate.css"/>
+
+<script type="text/javascript"  src="../ext/adapter/ext/ext-base.js"></script>
+<script type="text/javascript"  src="../ext/ext-core.js"></script>
+<script type="text/javascript"  src="../ext/ext-custom.js"></script> 
+<script type="text/javascript"  src="../ext/ext-all.js"></script>  
 <style>
 .dialogform {
 	display:none;
+}
+.x-window-bwrap {
+	position: static !important;
 }
 </style>
 </head>
@@ -451,12 +461,12 @@ if ($_REQUEST['datetype'] == 'dateset')
 	    'epoch_timeofcall' => array(
 	        'Date',
 	        1
-	    ),
+        ),
 	    'projectid' => array(
 	        'Campaign Name',
 	        1
 		),
-		'status' => array(
+	    'status' => array(
 	        'QA status',
 	        1
 	    ),
@@ -684,6 +694,9 @@ if ($_REQUEST['datetype'] == 'dateset')
 <hr />
 <br />
 <?php echo $dcont;?>
+
+
+
 </div>
     <div id="jp" style="display:none"></div>
     <div id="dialogcontainer" style="display:none"></div>
@@ -733,30 +746,206 @@ function epochtoutc(epoch)
    
     return d;
 }
-function sendemailtoclient(i)
+
+
+
+
+function sendemailtoclient(_leadid)
 	{   
-                var to = $("select[name=emailtoclient]").val();
-                var leadid = $("#tlid").html();
-                var emailcont = printable("#msg_print");
-                var odata = {htmlbody: emailcont};
-                var subject = $("input[name=subject]").val();
-                $.ajax({
-                    url:'qa.php?act=emailtoclient&to='+to+'&subject='+subject+'&leadid='+leadid,
-                    type: 'POST',
-                    data: odata,
-                    success:function(resp){
-                        alert("Email Sent");
-                    }
-                });
+        // var to        = $("#emailtoclient"+_leadid).val();
+		var to           = $("select[name=emailtoclient]").val();
+		var leadid       = $("#tlid").html();
+		var emailcont    = printable("#msg_print");
+		var odata        = {htmlbody: emailcont};
+		// var subject   = $("#emailtoclientsubject"+_leadid).val();
+		// var subject      = $("input[name=subject]").val();
+		// var delivery     = $("input[name=qadelivery]").val();
+		// var templateid   = $("select[name=emailtemplate]").val();
+		
+		var subject     = Ext.getCmp('subject').getValue();
+		// var templateid  = Ext.getCmp('template').getValue();
+		var to          = Ext.getCmp('recipient').getValue();
+		var delivery    = 'direct';
+		
+
+		if (to == '') {
+			Ext.MessageBox.show({
+				title: 'Information',
+				msg: 'Please Select Recipient',
+				width: 250,
+				buttons: Ext.MessageBox.OK,
+				icon: Ext.MessageBox.INFO
+			});
+		}else{
+			Ext.MessageBox.show({
+				title: 'Please wait',
+				msg: 'Sending Email',
+				progressText: 'Initializing...',
+				width:300,
+				progress:true,
+				closable:false
+			});
+
+			var qw = function(v){
+				return function(){
+					if(v == 12){
+						Ext.MessageBox.hide();
+					}else{
+						var i = v/11;
+						Ext.MessageBox.updateProgress(i, Math.round(100*i)+'% completed');
+					}
+				};
+			};
+			for(var i = 1; i < 11; i++){
+				setTimeout(qw(i), i*2000);
+			}
+
+			$.ajax({
+				url:'https://directemail.bluecloudaustralia.com.au/directemail/maildelivery.php?mainact=qaportalmail&to='+to+'&subject='+subject+'&leadid='+leadid+'&delivery='+delivery+'&bcid=<?php echo $bcid;?>'+'&username=+<?php echo $_SESSION['username'];?>',
+				type: 'POST',
+				data: odata,
+				success: function(resp){
+														
+					Ext.MessageBox.show({
+						title:'Mail Delivery Message',
+						msg: resp,
+						width : 350,
+						closable : false,
+						buttons: Ext.MessageBox.OK,
+						icon : Ext.MessageBox.INFO 
+					});
+					
+				} 
+			});
+
+		}
+		
 		
 	}
 
-function emaillead(leadid)
-	{
-		$("#emailcontacts"+leadid).dialog();
-                $("#setc").button();
-	}
+
+
+
+
+function emaillead(leadid,pid,clientid,bcid){
+		// $("#emailcontacts"+leadid).dialog();
+		// $("#setc"+leadid).button();
+
+
+	var form3 = new Ext.form.FormPanel({
+    	baseCls: 'x-plain',
+        labelWidth: 55,
+
+    });
+    
+ 
+	var store2= new Ext.data.JsonStore({
+
+		url: '../ExtJS/qaportal/getrecipient.php?clientid='+ clientid+'&bcid='+bcid,
+		autoLoad: true,
+		fields: ['name', 'email']
+	});	
+
+	var dropform = new Ext.form.FormPanel({
+
+		frame: true,
+            items: [
+			// 	{
+			// 	xtype: 'combo',
+			// 	fieldLabel:'Select Template',
+			// 	name:'cmb-data',
+			// 	forceSelection:true,
+			// 	store:store,
+			// 	emptyText:'Select Template...',
+			// 	triggerAction: 'all',
+			// 	editable:false,
+			// 	displayField:'name',
+			// 	valueField:'tempid',
+			// 	id: 'template',
+			// 	listeners: {
+            //   		select:  function(combo, record){
+			// 			var templatevalue = this.getValue();
+            //     		ChangeTemplate(templatevalue);
+            //   		}	
+           	// 	 }   
+				
+			// },
+			{
+
+				xtype: 'combo',
+				fieldLabel:'Select Recipient',
+				name:'cmb-data2',
+				forceSelection:true,
+				store:store2,
+				emptyText:'Select Recipient...',
+				triggerAction: 'all',
+				editable:false,
+				displayField:'email',
+				valueField:'email',
+				id: 'recipient'
+			},
+
+			
+			{ 
+					xtype: 'textfield',
+                    fieldLabel: 'Subject',
+                    name: 'subject',
+					id: 'subject',
+					width: 192
+                  
+                   
+                },{
+
+					xtype: 'textfield',
+                    fieldLabel: 'Delivery',
+                    name: 'delivery',
+					id: 'delivery',
+					hidden: true,
+					hideLabel: true,
+					width: 192
+					
+
+				}]
+       
+
+    });
+
+	
+	
+     var window3 = new Ext.Window({
+
+        bodyStyle:'padding: 10px',//adding padding to the components
+        width:350,
+        height:180,
+		items: [dropform,form3], //adding the combo to the window
+        layout:'form',
+		title:'QA PORTAL EMAIL',
+		modal: true,
+
+        buttons: [{
+            text: 'Send',
+            handler: function() {
+                sendemailtoclient(leadid)
+           }
         
+        },{
+            text: 'Cancel',
+
+            handler: function(){
+                window3.close();
+            }
+        }]
+        
+    });
+
+    
+    window3.show();
+
+		
+}
+		
+	
+
 function qacall(leadid,event)
 {
     event.stopPropagation();
@@ -820,17 +1009,24 @@ function setadminext()
 function qamail(leadid,event)
 {
     event.stopPropagation();
-    $("#qamailcont").remove();
+
+    if ( $("#qamailcont"+leadid).html() == null )
+    {
     $.ajax({
         url: "qa.php?act=getlead&leadid="+leadid,
         success: function(data){
         //$("#dispostion").html(data);
         
-                $("#container").append('<div id="qamailcont" style="display:none">'+data+'</div>');
+        $("#container").append('<div id="qamailcont'+leadid+'" style="display:none">'+data+'</div>');
                 emaillead(leadid);
                 // alert($("#reassign_agent_select").val());
         }
     });
+}
+    else
+    {
+        emaillead(leadid);
+    }
     
 }
 function doslots(leadid,clientid)
@@ -1412,6 +1608,40 @@ function player_window(projectid, leadid, projectlinkurl)
         }
     });
 }
+
+
+function ChangeTemplate(tid){
+
+	 $.ajax({
+	        url: 'qaver.php?act=changetemplate&tid='+tid,
+	        type: 'POST',
+
+	        success: function(resp){
+	            console.log(resp);
+				gettemplate(resp);
+	        }
+	    });
+
+}
+
+
+function gettemplate(response) {
+	
+	var responseArray     = response.split( ',' );  
+	var templatesub       = responseArray[ 0 ];
+	var templatedelivery  = responseArray[ 1 ];
+
+	Ext.getCmp('subject').setValue(templatesub);
+	Ext.getCmp('delivery').setValue(templatedelivery);
+
+	// document.getElementById("lead_subject").value = templatesub ;
+	// document.getElementById("qadelivery").value = templatedelivery ;
+
+
+
+}
+
+
 
 
 $(document).ready(function(e) {

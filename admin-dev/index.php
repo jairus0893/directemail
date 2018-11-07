@@ -31,9 +31,22 @@ if ($isadmin != 'user' && !checkrights('admin_portal'))
 <link type="text/css" rel="stylesheet" media="all" href="../jquery/css/chat/screen.css" />
 <link rel="stylesheet" type="text/css" href="../jquery/datatable/css/jquery.dataTables.css"/>
 <link rel="stylesheet" type="text/css" href="../jquery/pageguide/dist/css/pageguide.min.css"/>
-<script type="text/javascript" src="ext/adapter/ext/ext-base.js"></script>
-<script type="text/javascript" src="ext/ext-core.js"></script>
-<script type="text/javascript" src="ext/ext-custom.js"></script>
+<link rel="stylesheet" type="text/css" href="ExtJS/emailtemplateeditor/styles/htmleditor.css"/>  
+
+<script type="text/javascript"  src="ext/adapter/ext/ext-base.js"></script>
+<script type="text/javascript"  src="ext/ext-core.js"></script>
+<script type="text/javascript"  src="ext/ext-custom.js"></script> 
+<script type="text/javascript"  src="ext/ext-all.js"></script>  
+
+<!-- *****EMAIL TEMPLATE HTML EDITOR PLUGINS -->
+<script src="ExtJS/emailtemplateeditor/plugins/Ext.ux.form.HtmlEditor.MidasCommand.js"></script>
+<script src="ExtJS/emailtemplateeditor/plugins/FileUploadField.js"></script> 
+<script src="ExtJS/emailtemplateeditor/plugins/imageupload.js"></script> 
+<script src="ExtJS/emailtemplateeditor/plugins/data-view-plugins.js"></script> 
+<script src="ExtJS/emailtemplateeditor/plugins/Ext.ux.form.HtmlEditor.UndoRedo.js"></script>
+<script src="ExtJS/emailtemplateeditor/plugins/Ext.ux.form.HtmlEditor.Plugins.js"></script> 
+<script src="ExtJS/emailtemplateeditor/plugins/chooser.js"></script> 
+
 <script type="text/javascript" src="../jquery/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="../jquery/js/jquery-ui-1.8.12.custom.min.js"></script>
 <script type="text/javascript" src="../jquery/js/blockui.js"></script>
@@ -53,6 +66,7 @@ if ($isadmin != 'user' && !checkrights('admin_portal'))
 </style>
 <link href="../jquery/css/redmond/jquery-ui-1.8.12.custom.css" rel="stylesheet" type="text/css" />
 <link href="styles/style.css?v1" rel="stylesheet" />
+<script src="ExtJS/emailtemplateeditor/js/emaileditor.js"></script> 
 <?php
 echo $bsscripts;
 include "scripts.php";

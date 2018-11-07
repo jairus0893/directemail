@@ -90,3 +90,35 @@ td a img:hover {
 #searchresults .tableitem_,#searchresults .tableitem  {
     cursor:pointer;
 }
+
+
+
+/*Direct Mailing */
+
+ #qaemailprogress {
+    width: 80%;
+    background-color: #ddd;  
+    border-radius: 12px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px !important;
+    display: none; 
+}
+
+#qaprogressload {
+    width: 10%;
+    height: 30px;
+    background-color: #506274;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    border-radius: 8px;
+    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4), 0 2px 5px 0px rgba(0,0,0,0.3);
+}
+
+#qaprogresspercent {
+    text-align: center;
+    line-height: 30px;
+    color: white;
+}
+/*END*/

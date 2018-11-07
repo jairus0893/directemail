@@ -1,4 +1,5 @@
 <script>
+
 function agent_sendemail(tid, bcid)
 {
 	var leadid = document.getElementById("leadid").value;
@@ -7,26 +8,95 @@ function agent_sendemail(tid, bcid)
 	var cc = document.getElementById("emailcc").value;
 	var subject = document.getElementById("subject").value;
 	var message = document.getElementById("emailbody").value;
+	var deliverymethod = document.getElementById("delivery").value;  // Direct Mailing
+	var activationcode = document.getElementById("activationcode").value;
 	var attachment = $('.attachments').map(function() { return $(this).text(); }).get().join(",");
-	var texts = mce.getContent();
-	texts = encodeURI(texts);
+	texts = encodeURI(message);
 	texts = encodeURIComponent(texts);
-	message = texts;
+	// var texts = mce.getContent();
+	// message = texts;
 	var http = getHTTPObject();
-	var params = 'tid='+tid+'&act=sendemail&bcid='+bcid+'&projectid='+$("#switchprojectid").val()+'&from='+from+'&to='+to+'&cc='+cc+'&subject='+subject+'&uid='+userid+'&leadid='+leadid+'&message='+message+'&attachment='+attachment;
+
+	// Direct Mailing
+	var params = 'tid='+tid+'&act=agentsendemail&bcid='+bcid+'&projectid='+$("#switchprojectid").val()+'&from='+from+'&to='+to+'&cc='+cc+'&subject='+subject+'&uid='+userid+'&leadid='+leadid+'&message='+message+'&attachment='+attachment+'&delivery='+deliverymethod+'&body='+texts+'&level=agent';
 	if ( to == "" ) {
-		alert("Please fill up the recipient email address!");
-	} else {
-		$.ajax({
-            url: 'emailtemplate/emailtabsendemail.php',
-            type: 'POST',
-            data: params,
-            success: function(resp){
-                alert(resp)
-            }
+		Ext.MessageBox.show({
+			title:'Incomplete',
+			msg: 'Please fill up the recipient email address!',
+			width : 350,
+			closable : false,
+			buttons: Ext.MessageBox.OK,
+			icon : Ext.MessageBox.WARNING
+            
         });
+	} else {
+
+
+		if (activationcode == 'ACTIVATED'){ 
+			
+			Ext.MessageBox.show({
+				title: 'Please wait',
+				msg: 'Sending Email',
+				progressText: 'Initializing...',
+				width:300,
+				progress:true,
+				closable:false
+			});
+
+			var qw = function(v){
+				return function(){
+					if(v == 12){
+						Ext.MessageBox.hide();
+					}else{
+						var i = v/11;
+						Ext.MessageBox.updateProgress(i, Math.round(100*i)+'% completed');
+					}
+				};
+			};
+			for(var i = 1; i < 11; i++){
+				setTimeout(qw(i), i*2000);
+			}
+
+			$.ajax({
+				url: 'https://directemail.bluecloudaustralia.com.au/directemail/maildelivery.php',
+				type: 'POST',
+				data: params,	
+				success: function(resp){ 
+					Ext.MessageBox.show({
+						title:'Mail Delivery Message',
+						msg: resp,
+						width : 350,
+						closable : false,
+						buttons: Ext.MessageBox.OK,
+						icon : Ext.MessageBox.INFO 
+					});
+      
+				}
+			});
+		
+		}else{
+			Ext.MessageBox.show({
+				title:'Information',
+				msg: 'Email From is not yet verified. Please contact your administrator!',
+				width : 350,
+				closable : false,
+				buttons: Ext.MessageBox.OK,
+				icon : Ext.MessageBox.WARNING
+				
+			});
+
+		}
+
+
+
+
+
 	}
 }
+
+
+
+
 	function removeattachment(templateid, attch, ct) {
 		jQuery("#div_"+ct).remove();
 		// jQuery.ajax({
@@ -64,4 +134,6 @@ function agent_sendemail(tid, bcid)
             }
         });
 	}
+
+	
 </script>

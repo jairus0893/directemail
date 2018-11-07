@@ -6,14 +6,53 @@ function attachcompletes3($s3filepath, $filename) {
 	var atts = document.getElementById('atts');
 	atts.innerHTML = atts.innerHTML + '<a href="'+$s3filepath+'">'+$filename+'</a><br />';
 }
+
+
 function removeattachments3(templateid, attch, prefix, cts3) {
-	jQuery.ajax({
-		url: 'admin-s3.php?act=removeattachments3&templateid='+templateid+'&attachment='+attch+'&prefix='+prefix,
-        success: function(data) {
-            jQuery("#divs3_"+cts3).remove();
-            cmess(data);
+
+    Ext.MessageBox.show({
+    title:'Delete Attachment?',
+    msg: 'Are you sure you want to delete ' + attch,
+    width : 350,
+    closable : false,
+    buttons: Ext.MessageBox.YESNO,
+        fn : function(buttonValue, inputText, showConfig){
+    
+            if (buttonValue == 'yes'){
+                Ext.Ajax.request({
+                    url: 'admin-s3.php?act=removeattachments3&templateid='+templateid+'&attachment='+attch+'&prefix='+prefix,
+                    success: function(){
+                        var removeidattach= Ext.get("thumb#"+cts3);
+                        var removeidattach2= Ext.get("thumb2#"+cts3);
+                        
+                        removeidattach.remove();
+                        removeidattach2.remove();
+                    //    cmess(data);
+                    }
+                });
+
+            } //end btn
         },
-     });
+        icon : Ext.MessageBox.WARNING
+        
+    });
+
+
+}
+
+
+function removeattachmentssrc(templateid, attch, prefix, cts3) {
+
+
+    Ext.Ajax.request({
+        url: 'admin-s3.php?act=removeattachments3&templateid='+templateid+'&attachment='+attch+'&prefix='+prefix,
+        success: function(){
+           
+        }
+    });
+
+
+
 }
 function deletefiles3(filename,prefix,pid) {
 	jQuery.ajax({
